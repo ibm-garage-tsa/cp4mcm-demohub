@@ -1,0 +1,315 @@
+---
+title: Lab 3 - Security & Compliance Management
+description: Security & Compliance Management with IBM Cloud Pak for Multicloud Management
+---
+
+<FeatureCard
+  title="Security & Compliance Management with IBM Cloud Pak for Multicloud Management"
+  color="dark"
+  >
+
+![banner](/images/secmgmt-banner.jpg)
+
+</FeatureCard>
+
+
+<AnchorLinks>
+  <AnchorLink>Lab Overview</AnchorLink>
+  <AnchorLink>Prerequisite</AnchorLink>
+  <AnchorLink>Business Context</AnchorLink>
+  <AnchorLink>Namespace Policy</AnchorLink>
+  <AnchorLink>Network Policy</AnchorLink>
+  <AnchorLink>Summary</AnchorLink>
+</AnchorLinks>
+
+***
+
+## Lab Overview
+
+IBM Cloud Pak for Multicloud Management provides consistent visibility, automation, and governance across a range of multicloud management capabilities such as cost and asset management, infrastructure management, application management, multi-cluster management, edge management, and integration with existing tools and processes. Customers can leverage Cloud Pak for Multicloud Management to simplify their IT and application ops management, while increasing flexibility and cost savings with intelligent data analysis driven by predictive signals.
+
+IBM Cloud Pak for Multicloud Management helps companies make the transition from traditional monitoring systems to cloud-based ones more easily. It effectively monitors all kinds of IT resources in a hybrid environment. It helps Operation teams manage hybrid environments without hiring new personnel to support each new technology that is being used by developers.
+
+This Tutorial explores how to use governance and compliance features to manage your multicloud environments with a consistent set of configuration and security policies across all applications and clusters.You explore the following key capabilities:
+-	`Understand Cloud Pak Policy and Governance`
+-	`Learn to create and customize policies with the out of the box policy templates`
+-	`Learn to use namespace policies`
+-	`Learn to use network policies`
+
+***
+
+## Prerequisite
+
+- You need to have your personal CP4MCM on ROKS environment (check [here](../../environment/overview/) how to request it).
+- You need to pre-install all necessaries CLI tools (check [here](../installcli/) how to install them).
+- If you didn't complete the Lab 1 - Multicluster Management, you need, at least, to complete the steps of [Add Manged Clusters](https://pages.github.ibm.com/demohub/cloudpak-mcm/labs/clustermgmt/#add-managed-clusters) to have your clusters ready on CP4MCM to be able to follow this lab.
+
+***
+
+## Business Context
+
+As a member of the Security Operation (SecOps) team, you are having problems to minimize risks and identify policies violations in your multicloud hybrid world. Manage a Security Policy for all your cloud-based services and data across multiple providers is overwhelming your team.
+Your company is deploying multiple Kubernetes clusters to address their specific needs. Some Dev teams are deploying clusters across public and private clouds, and some are deploying clusters across regions, and some are deploying clusters to support the development and test needs.
+
+As different teams deploy more clusters, new challenges are introduced:
+-	How do I set consistent security policies across environments?
+-	Which clusters are compliant?
+
+Because of that, you want to explore how IBM Cloud Pak for Multicloud Management, provides consistent visibility, governance and automation of your complex environment.
+
+IBM Cloud Pak for Multicloud Management Governance and risk dashboard allows you to view and manage the number of security risks and policy violations in your clusters and applications. Policy templates are used to create one or more policies for third party or external security controls. For example, you can create a mutation policy with the mutation policy controller. Each policy document can have at least one or multiple templates.
+
+By using policy-based role and compliance management, you are able to:
+-	Set and enforce polices for security, applications, and infrastructure or auto enforcement at the cluster level.
+-	Check compliance against deployment parameters, configuration, and policies.
+-	Automatically remediate violations.
+
+In this tutorial, you create and enforce the following governance policies:
+-	`Namespace policy`
+-	`Network policy`
+
+***
+
+## Namespace Policy
+
+Kubernetes namespaces help organize cluster resources between multiple users and split the resource quote. Cluster administrator might restrict the user to use specific namespaces for applications. The namespace policy allows you to catch cluster violations when namespaces are not defined as per the policies.
+
+A sample namespace policy resemble the following:
+
+  ![](images/1-sec-mgmt-img.png)
+
+In this section, you create a policy that ensures that a specified namespace is present in clusters that match the selection criteria.
+
+1.Open the **Terminal** window.
+
+2.Let's use the ROKS Managed Cluster context:
+
+```
+kubectl config use-context roks-managed-cluster
+```
+
+3.Later you will create a Policy to inform/enforce a namespace in your cluster. Let’s verify that you don’t have this namespace by now. Run the command below:
+
+```
+oc get ns | grep k8demo
+```
+
+  ![](images/3-namespace-policy-image.png)
+
+  So far, you don’t have the k8demo namespace. Great! Let’s create a Policy to inform when your cluster is not compliance with a namespace policy.
+
+4.Back to the IBM Cloud Pak for Multicloud Management Web Console page on your browser (If you don't have the CP4MCM Console opened, check [here](../beforestart/) how to access it).
+
+  On the top-left of the page, open the **Menu** (1) and select **Govern risk** (2).
+
+  ![](images/4-namespace-policy-image.png)
+
+5.Here you see the Policy tab. This view displays the policies that have been created and the dashboard of policy compliance for each cluster. By now, you don’t have any Policy created. Let’s do it! Click **Create policy**.
+
+  ![](images/5-namespace-policy-image.png)
+
+6.On the Name field type **policy-namespace** (1), on the Namespace field select **default** (2), on the Specifications field select **namespace** (3) and on Cluster binding select **environment: QA** (4).
+
+  ![](images/6-namespace-policy-image.png)
+
+7.Now, let’s change the namespace name value. In the YAML file section, on the right, change the name attribute from prod to k8demo. With that, you are creating a Policy to verify if you have a k8demo namespace/project in your cluster.
+
+  ![](images/7-namespace-policy-image.png)
+
+8.Notice that the policy is set to inform rather than enforce. With value inform, the policy only reports whether the cluster is compliant to the specified policies. With value enforce, the policy provides automatic remediation. Keep inform value by now.
+
+  ![](images/8-namespace-policy-image.png)
+
+9.Click the button **Create** to create your new policy.
+
+  ![](images/9-namespace-policy-image.png)
+
+10.In a few seconds, the policy controller will check if the namespace k8demo is present and provides information regarding the current compliance of the policies.
+Remember, you did not enforce this policy. Instead we specified inform. As such, the Governance and risk view displays a policy violation in our cluster, as illustrated below.
+
+  ![](images/10-namespace-policy-image.png)
+
+11.Click the **Cluster violations** link to find which cluster is violating the policy.
+
+  ![](images/11-namespace-policy-image.png)
+
+12.The managed-roks cluster is in violation of the policy which requires a namespace that is called “k8sdemo” to exist.
+
+13.The managed-roks is the same cluster that you verified in the first step of this section that k8sdemo namespace does not exist. Hence it shows that there is no namespace k8demo in the cluster.
+
+  ![](images/13-namespace-policy-image.png)
+
+14.Now, let’s verify the k8demo namespace still does not exist. Back to the terminal window, run the command below:
+
+```
+oc get ns
+```
+
+  ![](images/14-namespace-policy-image.png)
+
+  There should not be a namespace named k8demo listed, which indicates that the policy did not enforce it to be created.
+
+15.Back to the browser. Now, let’s change the policy to be enforced. In the policies view, click on **POLICY VIOLATIONS**.
+
+  ![](images/15-namespace-policy-image.png)
+
+16.Click the **policy-namespace** link.
+
+  ![](images/16-namespace-policy-image.png)
+
+17.Open the **YAML** tab.
+
+  ![](images/17-namespace-policy-image.png)
+
+18.Click the **Edit** button to go into edit mode to modify the YAML file.
+
+  ![](images/18-namespace-policy-image.png)
+
+19.Change the value of remediationAction: inform to **remediationAction: enforce**.
+
+  ![](images/19-namespace-policy-image.png)
+
+20.Click the **Submit** button to save the change.
+
+  ![](images/20-namespace-policy-image.png)
+
+21.Open the **Details** tab.
+
+  ![](images/21-namespace-policy-image.png)
+
+22.A few seconds later, the policy violation is automatically removed.
+
+  ![](images/22-namespace-policy-image.png)
+
+23.Open the **Violations** tab.
+
+  ![](images/23-namespace-policy-image.png)
+
+24.You also can validate the same from the Violations view: No Violations are available.
+
+  ![](images/24-namespace-policy-image.png)
+
+25.Now, let’s check how the policy on enforce mode, removed the violation. Back to the terminal window, run the command below, to ensure that the k8demo namespace is created in the cluster.
+
+```
+oc get project | grep k8demo
+```
+
+  ![](images/25-namespace-policy-image.png)
+
+  You have successfully implemented the Namespace Policy!
+
+***
+
+## Network Policy
+
+A network policy is a specification of how groups of pods are allowed to communicate with each other and other network endpoints.NetworkPolicy resources use labels to select pods and define rules which specify what traffic is allowed to the selected pods.
+
+Apply the network policy to define which network request to deny. For more information about network policies, refer to this [documentation](https://kubernetes.io/docs/tasks/administer-cluster/declare-network-policy/).
+
+A sample network policy resembles the following:
+
+  ![](images/0-network-policy-image.png)
+
+IBM Cloud Pak for Multicloud Management enables your team to check and enforce network policy compliance against your multiple clusters in your hybrid environment.
+
+In this section, you learn how to create a Network Policy in IBM Cloud Pak for Multicloud Management. This lab needs an application that has at least two pods with services where one pod needs to connect to other pod's associated service. You will use the application Quote of the Day that is already deployed on the cluster in the default project.
+
+1.Back to the CP4MCM Console page tab on your browser, click **Policies** link on navigation breadcrumb.
+
+  ![](images/1-network-policy-image.png)
+
+2.On the Policies view, click **New policy**.
+
+  ![](images/2-network-policy-image.png)
+
+3.Enter **policy-network** as name of the policy (1), select **default** as namespace (2), on specifications field choose **NetworkPolicy – deny network request** (3). On the cluster binding field select **environment: QA** (4).
+
+  ![](images/3-network-policy-image.png)
+
+4.On the YAML file editor, change the objectDefinition > metadata > name from deny-from-other-namespaces to **deny-all-ingress-egress-traffic**.
+
+  ![](images/4-network-policy-image.png)
+
+5.The spec section is defined as follow:
+```
+spec:
+	podSelector: {}
+	policyTypes:
+		- Ingress
+		- Egress
+```
+
+  ![](images/5-network-policy-image.png)
+
+6.Keep remediationAction as inform by now. Click **Create**.
+
+  ![](images/6-network-policy-image.png)
+
+7.After few seconds, you should check that the policy violation was detected but not enforced.
+
+  ![](images/7-network-policy-image.png)
+
+  Because the policy is on inform mode, the policy is not forced.
+
+8.Click on the new policy: **policy-network**.
+
+  ![](images/8-network-policy-image.png)
+
+9.You see that one decision is in violation.
+
+  ![](images/9-network-policy-image.png)
+
+10.Click the **Violations** tab.
+
+  ![](images/10-network-policy-image.png)
+
+11.Here you see the violation about network isolation. Your local-cluster is not compliance with this network policy. Let’s fix it!
+
+  ![](images/11-network-policy-image.png)
+
+12.Open a new browser tab, and open the OpenShift Web Console (there is a link in the email that you received when you requested your Managed ROKS environment - Cloud Pak for **Apps**).
+
+13.Use the side bar menu and select **Networking > Network Policies**.
+
+  ![](images/14-network-policy-image.png)
+
+14.Click the **Create Network Policy** button.
+
+  ![](images/15-network-policy-image.png)
+
+15.On the right, open the **Samples** tab.
+
+![](images/15_2-network-policy-image.png)
+
+16.On the Samples tab, there are a list of policy samples. Fortunately for us, there is a Network Policy Sample that we can use.  Click the **Try it** link (1).  Then edit the YAML and insert the letters from to the metadata name, replace deny-other-namespaces to **deny-all-ingress-egress-traffic** (2).  Click the **Create** button to create this policy (3).
+
+  ![](images/16-network-policy-image.png)
+
+17.Great the policy is created now.
+
+  ![](images/17-network-policy-image.png)
+
+18.Go back to the CP4MCM browser tab.  You should notice that there are no violations now (wait 10 seconds if you have to).
+
+  ![](images/18-network-policy-image.png)
+
+19.Click on **Policies** link in breadcrumbs, to go back to the Policies page.
+
+  ![](images/19-network-policy-image.png)
+
+20.After waiting 10 seconds, you should see that all violations are gone.
+
+  ![](images/20-network-policy-image.png)
+
+Great! You have successfully implemented Network Policy!
+
+***
+
+## Summary
+
+You completed the Cloud Pak for Multicloud Management tutorial: Security & Compliance Management. IBM Cloud Pak for Multicloud Management governance, risk and compliance framework helps create custom policy controllers. You learned in the Lab how to create and customize policies with the out of the box policy templates.
+
+If you would like to learn more about Cloud Pak for Multicloud Management, please refer to:
+-	<a href="https://www.ibm.com/cloud/cloud-pak-for-management" target="blank">Cloud Pak for Multicloud Management home page</a>
+- <a href="https://www.ibm.com/demos/collection/Cloud-Pak-for-Multicloud-Management" target="blank">Cloud Pak for Multicloud Management Demos </a>

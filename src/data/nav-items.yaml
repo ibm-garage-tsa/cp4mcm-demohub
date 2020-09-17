@@ -1,0 +1,26 @@
+- title: Working with CP4MCM 2.0 on Skytap
+  pages:
+    - title: Overview
+      path: /environment/overview/
+    - title: Getting Started with Skytap Env
+      path: /gettingstarted/
+- title: Learning with Labs
+  pages:
+    - title: Overview
+      path: /labs/overview/
+    - title: Before You Start
+      path: /labs/beforestart/
+    - title: Introduction
+      path: /labs/introduction/
+    - title: Lab 1 - Multicluster Management
+      path: /labs/clustermgmt/
+    - title: Lab 2 - Application Management
+      path: /labs/appmgmt/
+    - title: Lab 3 - Security & Compliance Management
+      path: /labs/securitymgmt/
+- title: Resources
+  pages:
+    - path: /resources/
+- title: Contribute
+  pages:
+    - path: /contribute/

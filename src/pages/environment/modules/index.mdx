@@ -1,0 +1,55 @@
+---
+title: Installing Extra Modules for Cloud Pak for MCM 1.3.2
+description: IBM Cloud Pak for MCM 1.3.2 additional modules
+---
+
+IBM Cloud Pak for Multicloud Management consists of multiple components. Automated installer available in IBM Cloud catalog installs Core Services only. If you want to demonstrate additional capabilities follow this guide.
+
+List of additional components you may want to install:
+- LDAP
+- Monitoring module (former name: IBM Cloud App Management)
+- Ansible Tower
+- Terraform Automation module (former name: Cloud Automation Manager)
+- CloudForms
+
+## Useful resources
+
+There is a crowd-sourced repository of scripts that help you automate installing additional modules. 
+
+You can find it here: [PartyROKS](https://github.ibm.com/joshisa/partyroks) 
+
+Maintainer: Sanjey Joshi & RH Synergy Team
+
+Another repository of useful scripts can be found here: [https://github.com/pirsoscom/mcm_install_roks](https://github.com/pirsoscom/mcm_install_roks)
+
+Maintainer: Niklaus Hirt
+
+WARNING: All the scripts were written/tested for Mac and Linux. If you run Windows workstation better use Linux VM for this task.
+
+## Recommended sequence of steps:
+
+Configure the required CLIs according to the page [Prerequisite - Install CLI tools](https://pages.github.ibm.com/demohub/cloudpak-mcm/labs/installcli/)
+
+1. Clone the PartROKS repo to your local workstation.
+
+2. Edit `00-variables` file to include the URL to your Cloud Pak instance.
+
+3. Run scipt `01a-cp4mcm-roks-hardening-ssl-tls-everywhere.sh` which changes the self-signed certificates with Let's Encrypt ones. 
+
+4. Run script `01b-cp4mcm-roks-hardening-cronjob-prometheus-mem-autotuner.sh` which configure autotuning of Prometheus service.
+
+5. Run script `02-cp4mcm-roks-external-registry-setup.sh` if you plan to upload images to the internal OpenShift registry.
+
+6. Run script `04-deploy-mcm-openldap-ROKS.sh` to install and configure OpenLDAP. You can edit script to modify the users & passwords configured by default
+
+7. Run script `05-cp4mcm-roks-ansible-online-setup.sh` to install Ansible Tower. If the script fails during install (it happens) just run it again.
+
+## Installing CloudForms
+
+To showcase VM management capabilities of IBM Cloud Pak for Multicloud Management you need to install CloudForms.
+
+Follow the installation procedure here: [Getting started with CloudForms in IBM Cloud](https://cloud.ibm.com/docs/cloud-pak-multicloud-management?topic=cloud-pak-multicloud-management-cf-getting-started)
+
+Be aware, that to demonstrate VM management you need to define CloudForms provider connections to some target environments - like AWS, Azure or Vmware, MSVMM or RHEV. 
+
+More step-by-step guides coming soon!
