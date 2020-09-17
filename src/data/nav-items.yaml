@@ -9,7 +9,7 @@
     - title: Overview
       path: /labs/overview/
     - title: Before You Start
-      path: /labs/beforestart/
+      path: /gettingstarted/
     - title: Introduction
       path: /labs/introduction/
     - title: Lab 1 - Multicluster Management
