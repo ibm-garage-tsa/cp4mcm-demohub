@@ -190,7 +190,7 @@ In this section, you will add two new managed clusters in your Control Panel. As
 
 ![](images/2020-09-17-20-30-28.png)
 
-20.MicroK8s terminal has a yellow background. To verify the cluster status run the following command in the **MicroK8s* window
+20.MicroK8s terminal has a yellow background. To verify the cluster status run the following command in the **MicroK8s** window
 
   ```
   kubectl get nodes
@@ -202,9 +202,9 @@ In this section, you will add two new managed clusters in your Control Panel. As
 
 21.**Paste** the generated command that you previously copied in the clipboard. When you run the command, several Kubernetes objects are created in the multicluster-endpoint namespace.
 
-    ![](images/2020-09-17-20-33-29.png)
+  ![](images/2020-09-17-20-33-29.png)
 
-    If you see the error as before - just run the command again.
+  If you see the error as before - just run the command again.
 
 22.You can view the progress by entering the command:
 
@@ -280,97 +280,86 @@ In this section, you visualize key information about your managed environments i
 
 ## Deploy an Application
 
-WARNING: This section has not been updated to version 2.0. Skip for now and stay tuned :)
-
 In this step, you install a helm chart from the catalog to your hub-cluster and your managed-roks cluster. Let's do it!
 
-1.Open the **Menu** (1) and click on **Administer** (2) > **Helm repository** (3).
+1. Open the **Menu** (1) and click on **Administer** (2) > **Helm repository** (3).
 
-  ![](images/32-cluster-mgmt-img.png)
+  ![](images/2020-09-18-15-56-01.png)
 
-2.On the Helm Repositories page, click **Add Repository** to register a new Helm Repository.
+2. On the Helm Repositories page, click **Add Repository** to register a new Helm Repository.
 
-  ![](images/33-cluster-mgmt-img.png)
+  ![add repository](images/2020-09-18-16-00-28.png)
 
-3.Type **coc-charts** (1) as repository Name, and enter **https://ibm-icp-coc.github.io/charts/repo/stable** as URL (2). Click **Add** (3).
+3. Enter **dte-charts** (1) as repository Name, and enter **https://raw.githubusercontent.com/dymaczew/charts/master/repo/incubator** as URL (2). Click **Add** (3).
 
-  ![](images/34-cluster-mgmt-img.png)
+  ![repo add dialog](images/2020-09-18-16-02-55.png)
 
-4.After few seconds, you should see Sync Status as **Completed** (1). Now, let’s deploy an application from this new Helm repository. Click **Catalog** (2) on upper right corner of the page to view the list of helm charts that you can deploy.
+4. After few seconds, you should see Sync Status as **Completed** (1). Now, let’s deploy an application from this new Helm repository. Click **Catalog** (2) on upper right corner of the page to view the list of helm charts that you can deploy.
 
-  ![](images/35-cluster-mgmt-img.png)
+  ![helm repo added](images/2020-09-18-16-05-20.png)
 
-5.Search for **sum** (1) and select **sumapp** (2) application.
+5. Search for **mod** (1) and select **modresortapp** (2) application.
 
-  ![](images/36-cluster-mgmt-img.png)
+  ![modresortapp](images/2020-09-18-16-07-07.png)
 
-6.The chart deploys a simple Liberty web application for demonstration purposes. Select **Configure** to continue.
+6. The chart deploys a simple Liberty web application for demonstration purposes. Select **Configure** to continue.
 
-  ![](images/37-cluster-mgmt-img.png)
+  ![configure](images/2020-09-18-16-08-32.png)
 
-7.Enter **mysumapp** as Helm release name (1), select **default** as Target namespace (2). On Target cluster, select the **managed-roks** (3). Then click **Install** (4).
+7. Enter **demo** as Helm release name (1), select **default** as Target namespace (2). On Target cluster, select the **local-cluster** (3). Then click **Install** (4).
 
-  ![](images/38-cluster-mgmt-img.png)
+  ![install](images/2020-09-18-16-12-42.png)
 
-8.The installation starts immediately but it takes a few minutes to deploy the application to remote cluster. Click **View Helm Releases** to view the status.
+8. The installation starts immediately but it takes a few minutes to deploy the application to remote cluster. Click **View Helm Releases** to view the status.
 
-  ![](images/39-cluster-mgmt-img.png)
+  ![](images/2020-09-18-16-14-00.png)
 
-9.On the Helm releases page, you can check that **mysumapp** helm is deployed to your clusters.
+9. On the Helm releases page, you can check that **demo** helm is deployed to your Hub cluster.
 
-  ![](images/40-cluster-mgmt-img.png)
+  ![](images/2020-09-18-16-15-10.png)
 
-10.Back to your terminal window again. Run the command below to guarantee that you are using the managed-roks cluster context.
+10. Now, go back to the **Hybrid applications** menu ("hamburger" -> Manage Applications -> Hybrid Applications). You can notice that now it shows your just deployed application. Click the **demo-modresrtapp** application.
 
-```
-kubectl config use-context roks-managed-cluster
-```
+  ![](images/2020-09-18-16-27-52.png)
 
-11.From the command line window, check if the new pod is created and it is in Running state. Execute the command below:
+11. You should see the details of the sample application, as shown below. Click on any of the icons to see the details of each object. 
 
-```
-oc project default
-```
+  ![](images/2020-09-18-16-38-53.png)
 
-```
-oc get pods | grep mysumapp
-```
+12. Click the **demo-modresortapp** placement rule (1) and notice that it defines the placement of the application to the clusters with label **environment=Dev** (2). It also specify that one instance of the application should be deployed in case more clusters is labeled this way.
+    
+  ![](images/2020-09-18-16-43-05.png)
 
-  ![](images/41-cluster-mgmt-img.png)
+13. Let's modify the target cluster. Edit the label in the yaml file on the right (1) changing the **Dev** to **QA** and apply the changes with the **Update** icon (2)
 
-12.Now, let’s define a route for our web application. First, let’s get the service name created for your application. Execute the command below to capture the Service’s name.
+  ![](images/2020-09-18-20-22-10.png)
 
-```
-oc get services | grep mysumapp
-```
+14. In a short time you should notice that the placement rule change is picked by the system and the different target cluster is designeted as a target for deployment.
 
-  ![](images/42-cluster-mgmt-img.png)
+  ![](images/2020-09-18-20-25-11.png)
 
-13.Now that you know the service name (mysumapp-sumapp-service), let’s create a route by exposing our service using the command below:
+15. Let's verify that the application is actually running on MicroK8s cluster. Go back to the yellow **MicroK8s** terminal windows and run the following commands:
 
-```
-oc expose service mysumapp-sumapp-service
-```
+  ```sh
+  oc get pods -n default
+  oc get service -n default
+  ```
 
-14.View your new route:
+  ![](images/2020-09-18-20-27-03.png)
 
-```
-oc get route | grep mysumapp
-```
+16. Notice the **Node port** used by the service. In the example screenshot it is `31946`
 
-  ![](images/43-cluster-mgmt-img.png)
+  ![](images/2020-09-18-20-28-29.png)
 
-  Copy the route of your application.
-
-15.Back to your browser window, open a new tab and navigate to your application route hostname.
-
+17. Go back to your browser window, open a new tab and provide the following URL `http://microk8s.demo.ibmdte.net:[port-number-from-previous-step]/resorts`
+    
   ![](images/44-cluster-mgmt-img.png)
 
-16.Great! Your Liberty application is available on your managed-roks cluster. In our next lab, you will deploy a business application (ModResorts) using more advanced techniques.
+16.Great! Your Liberty application is available on your managed cluster. 
 
-  ![](images/45-cluster-mgmt-img.png)
+  ![](images/2020-09-18-20-31-41.png)
 
-  This application is really simple sample, just to show you how easy is to install an application from the catalog in multiple clusters. In our next lab you will deploy a business application (ModResorts) using more advanced techniques about Application Management deployment using channels and subscriptions concepts.
+  This application is really simple sample, just to show you how easy is to install an application from the catalog in multiple clusters. In our next lab you will deploy a business application (ModResorts) learning details about Application Management deployment using channels and subscriptions concepts.
 
 ***
 
@@ -378,21 +367,17 @@ oc get route | grep mysumapp
 
 You can use the management console to create, manage, view details, and troubleshoot application resources and Kubernetes objects in all clusters from a single interface. The management console search page supports searching for application resources by the component kind for each resource.
 
-1.Back to the IBM Cloud Pak for Multicloud Management web page tab, click on the **Search** button.
+1. Back to the IBM Cloud Pak for Multicloud Management web page tab, click on the **Search** button.
 
   ![](images/46-cluster-mgmt-img.png)
 
-2.The Search menu gives access to application resources and Kubernetes objects. The Search overview screen displays commonly used search templates - a pre-defined template to view workloads, unhealthy pods and workloads created in last hour. You can also create your own search templates. Click on **Created Last Hour** button.
+2. The Search menu gives access to application resources and Kubernetes objects. The Search overview screen displays commonly used search templates - a pre-defined template to view workloads, unhealthy pods and workloads created in last hour. You can also create your own search templates. Click on **Created Last Hour** button.
 
   ![](images/47-cluster-mgmt-img.png)
 
-3.If you scroll down to the **Pod** section, you should see the **mysumapp-sumapp** pod that you created earlier in the list along with other pods. Click on the pod name.
+3. If you scroll down to the **Pod** section, you should see the **demo-modresort** pod that you created earlier in the list along with other pods. You can also provide the search criteria in the filter section. For example: type `kind` and select **pod**, provide the `modresort` as search string and specify `status` as **Running**.
 
-  ![](images/48-cluster-mgmt-img.png)
-
-4.From this screen you can open Pod definition, edit the values and view logs. You are able to do this for any objects, in any managed cluster.
-
-  ![](images/49-cluster-mgmt-img.png)
+  ![](images/2020-09-18-20-39-41.png)
 
   Congratulations! You have successfully completed the lab “Multicluster Management with IBM Cloud Pak for Multicloud Management”.
 
