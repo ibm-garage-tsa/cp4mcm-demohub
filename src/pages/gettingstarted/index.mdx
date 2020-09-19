@@ -55,7 +55,13 @@ It takes about 10-15 minutes for the environment to start and stabilize
 
   ![](images/2020-09-11-11-12-49.png)
 
-  Verify the status of the Cluster, Control Plane and Operators (all should have a green mark). There should be **7 Nodes**. If there is more go to the [Troubleshooting startup](#troubleshooting-environment-startup) section below.
+  Verify the status of the Cluster, Control Plane and Operators (all should have a green mark). There should be **7 Nodes**. If there is more, go to the [Troubleshooting startup](#troubleshooting-environment-startup) section below.
+
+  If you see some hanging pods (number next to the grey icon), you can check for [hanging pods](#some-pods-hangs-on-startup). If you see some number of pods (usually ~20) naxt to red circle **Error** - do not worry - these were failed cron jobs that does not affect the environment.
+
+***
+
+## Opening Cloud Pak for MCM User Interface
 
   Open the new browser tab with the '+' and select the "IBM Cloud Pak for Multi..." bookmark
 
@@ -67,7 +73,7 @@ It takes about 10-15 minutes for the environment to start and stabilize
 
   ![](images/2020-09-11-11-26-04.png)
 
-  If everything initializaed properly, you should see the following menus available
+  If everything initializaed properly, you should see the following menus available:
 
   Automate infrastructure
 
@@ -77,9 +83,9 @@ It takes about 10-15 minutes for the environment to start and stabilize
 
   ![](images/2020-09-11-11-35-55.png)
 
-  If you cannot see these menus check if there are any [hanging pods](#some-pods-hangs-on-startup).
+  If you cannot see these menus, check if there are any [hanging pods](#some-pods-hangs-on-startup). It is worth waiting another 3-5 minutes and refreshing the browser window. The environment is massive and it really takes a time to stabilize Kubernetes cluster with 500+ pods running after startup of VMs.
 
-  Otherwise, environment is ready to start the excercises.
+  If you see the menus, environment is ready to start the excercises. If you cannot see just Monitoring menus - don't worry, you can still do most of the labs.
 
   On the desktop (you may need to minimize the browser window to see it), there are two links to the Terminal sessions
 
@@ -91,15 +97,30 @@ It takes about 10-15 minutes for the environment to start and stabilize
 
   During the excercises pay attention in which window you are supposed to run different commands
 
+***
+
 ## Troubleshooting environment startup
+
+***
 
 ### Worker node registered as localhost
 
   Openshift Container Platform was designed for continuous running so starting it from the VM snapshot is not natural behaviour. Sometimes, when the Skytap systems are busy with other workloads it may happen that due to some timeouts in the initialization process one or more of the nodes registers to the control plane as 'localhost' rather then using actual worker node name. If this happens on the Openshift console you can see 8 nodes instead of 7.
 
-  To correct the situation, open the terminal window, login to OCP with the `./oclogin.sh` command and run the following command `oc delete node localhost`
+  To correct the situation, open the terminal window (link **Terminal** on the desktop), and run the following commands:
+  
+  ```sh
+  ./oclogin.sh
+  oc delete node localhost
+  ```
 
-  Then stop the whole environment and start it again.
+  Then, restart the whole environment. To do this, access the Skytap menu, select first icon on the left (**All VMs**) and then use the stop and start buttons in the top right corner.
+
+  ![](images/2020-09-19-08-21-51.png)
+
+  ![](images/2020-09-19-08-23-49.png)
+
+***
 
 ### Some pods hangs on startup.
 
