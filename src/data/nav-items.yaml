@@ -18,6 +18,10 @@
       path: /labs/appmgmt/
     - title: Lab 3 - Security & Compliance Management
       path: /labs/securitymgmt/
+    - title: Lab 4 - Monitoring and using SRE Golden Signals
+      path: /labs/monitoring/
+    - title: Lab 5 - Event Management and Runbook Automation
+      path: /labs/events/
 - title: Resources
   pages:
     - path: /resources/
