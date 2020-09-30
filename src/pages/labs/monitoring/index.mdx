@@ -1,6 +1,6 @@
 ---
-title: Lab 2 - Monitoring using SRE Golden Signals
-description:
+title: Lab 4 - Monitoring using SRE Golden Signals
+description: Monitoring using SRE Golden Signals with IBM Cloud Pak for Multicloud Management
 ---
 
 <FeatureCard
@@ -80,6 +80,15 @@ You will complete the following tasks:
 
 In this section, you will add a managed cluster in your Control Panel. If you have done this before as a part of [Cluster Management lab](../clustermgmt/index.mdx) you may skip to the [Next step](#deploy-cloud-native-monitoring-to-the-managed-cluster)
 
+0. **IMPORTANT:** MicroK8s instance that you will use in this exercises as a managed cluster gets automatically updated on startup. Beginning with version 1.19, the default configuration of MicroK8S prevents running containers in privileged mode, which breaks some of labs. Before you continue, go to the desktop and open the terminal window to MicroK8s cluster clicking the **MicroK8s Terminal** link. Then, in a yellow window, run the following commands:
+
+```sh
+sudo echo "--allow-privileged=true" >> /var/snap/microk8s/current/args/kube-apiserver
+sudo systemctl restart snap.microk8s.daemon-apiserver.service
+```
+
+When prompted for a ibmuser password, enter **engageibm**
+
 1. To start the lab, you should be in your Cloud Pak for Multicloud Management Web Console. If you are not, check [here](../gettingstarted/) how to open your console page.
 
   ![](images/2-cluster-mgmt-img.png)
@@ -148,6 +157,7 @@ First, you need to install a multicluster plugin to the `cloudctl` command. Open
 
 ```sh
 curl -kLo cloudctl-mc-plugin https://cp-console.apps.demo.ibmdte.net/rcm/plugins/mc-linux-amd64
+cloudctl login -a https://cp-console.apps.demo.ibmdte.net -u bob -p Passw0rd -n default
 cloudctl plugin install -f cloudctl-mc-plugin
 ```
 
@@ -205,7 +215,7 @@ If you are redirected to login page, login again as user **bob** with password *
 
 The page probably won't show any resources yet, because the process to install Kubernetes data collector was just started. You can check if it was successfully deployed running the previous command again (in yellow terminal).
 
-![](images/2020-09-27-17-30-30.png)
+![](images/2020-09-30-12-44-36.png)
 
 When it is deployed, after 1-2 minutes you can refresh the browser, and you should see the view showing now all the resources from the managed cluster.
 
@@ -233,19 +243,88 @@ Feel free to explore other resources and their metrics. For example you can clic
 
 ![](images/2020-09-27-17-49-48.png)
 
-tbc...
-
 ***
 
 ## Deploy Bookinfo Application
 
+On top of monitoring Linux worker nodes and basic Kubernetes objects Operations teams want are responsible for monitoring business applications. So let's deploy sample application, called Bookinfo
+
+1. To start, clone the git repository containing the yaml files needed to deploy the application. Using the green terminal window, run the following commands on the **Management Hub**
+
+```sh
+git clone https://github.com/dymaczew/charts
+cd charts
+```
+
+2. Apply the application resources running the following commands:
+
+```sh
+/home/ibmuser/oclogin.sh
+oc apply -f bookinfo-multiclister-2020.2.0
+oc apply -f kubernetes-1.19-ingress-deployable.yaml
+```
+
+The last command updates the ingress deployable for Kubernetes 1.19 version that is running on the your managed cluster (Ingress definition was changed in 1.19 and extended with new mandatory fields)
+
+The output looks like the following:
+
+![](images/2020-09-30-13-38-44.png)
+
+Don't worry about the error in the last line - it just means that ImagePolicy admission controller is not used in the environment.
+
+3. Now, let's edit the placement rule for the application to get it deployed on the managed cluster (we tagged in with label "environment=QA"). Navigate to application view, selecting the "hamburger" menu in the top-left corner, then **Observe environments** and **Overview**
+
+![](images/2020-09-30-13-48-03.png)
+
+On the overview page, scroll down to the Applications section and select **bookinfo-app** link. We recommend this way, becasue for some reason (probably a bug?) the application is not listed directly on the Hybrid Applications list
+
+![](images/2020-09-30-13-50-11.png)
+
+4. When the Application view opens, click on the **bookinfo-rule** icon
+
+![](images/2020-09-30-13-51-45.png)
+
+5. Edit the placement rule in the editor on the right, changing the value of the label from **Dev** to **QA** (1) and then apply you changes with the button on top of the editor(2)
+
+![](images/2020-09-30-13-56-39.png)
+
+6. After a few seconds, you should notice that the application is now being placed on the **microk8s** cluster. The deployment takes usually 1-2 minutes needed to pull images and start containers.
+
+![](images/2020-09-30-18-55-48.png)
+
+7. You can verify if the application was successfuly deployed and is accessible by opening a new browser tab and entering the URL: `bookinfo.10.0.0.2.nip.io`. You should reach the page that looks like below:
+
+![](images/2020-09-30-19-50-18.png)
+   
 ***
 
-## Deploy synthetics monitoring Point-of-Presence
+## Exploring synthetics monitoring
+
+Cloud Pak for Multicloud Management is capable of monitoring the application availability using a synthetic transaction monitoring. There is a default agent installed on the Hub cluster that automatically starts monitoring any ingress object that is deployed as a part of Hybrid application. Let's check how it looks like.
+
+1. Open the Monitoring module interface (Select "hamburger" menu, then **Monitor Health**, then **Infrastructure monitoring**). Then select the **Synthetic results** tab
+
+![](images/2020-09-30-20-01-54.png)
+
+2. On the page Synthetic results page, you should see the automatically configured monitor for ingress deployed as a part of Bookinfo application. Click on the monitor name to explore details
+
+![](images/2020-09-30-20-03-37.png)
+
+3. You can adjust the scope of the timeline, reducing the windows to last 30 minutes (1). You can also select to see a Response time graph or a response time Breakdown (2). This helps to diagnose issues related to name resolution on establishing the SSL session.
+
+![](images/2020-09-30-20-11-38.png)
+
+4. When you scroll down you can see the results of actual tests. Select any dot on the graph to see detailed breakdown of the response.
+
+![](images/2020-09-30-20-13-53.png)
+
+You can deploy more agents in different locations to have your applications tested for availability and response time from a customer perspective.
 
 ***
 
 ## Explore SRE Golden Signals
+
+tbc
 
 ***
 
