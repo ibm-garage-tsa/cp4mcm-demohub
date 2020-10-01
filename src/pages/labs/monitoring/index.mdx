@@ -80,7 +80,7 @@ You will complete the following tasks:
 
 In this section, you will add a managed cluster in your Control Panel. If you have done this before as a part of [Cluster Management lab](../clustermgmt/index.mdx) you may skip to the [Next step](#deploy-cloud-native-monitoring-to-the-managed-cluster)
 
-0. **IMPORTANT:** MicroK8s instance that you will use in this exercises as a managed cluster gets automatically updated on startup. Beginning with version 1.19, the default configuration of MicroK8S prevents running containers in privileged mode, which breaks some of labs. Before you continue, go to the desktop and open the terminal window to MicroK8s cluster clicking the **MicroK8s Terminal** link. Then, in a yellow window, run the following commands:
+**IMPORTANT:** MicroK8s instance that you will use in this exercises as a managed cluster gets automatically updated on startup. Beginning with version 1.19, the default configuration of MicroK8S prevents running containers in privileged mode, which breaks some of labs. Before you continue, go to the desktop and open the terminal window to MicroK8s cluster clicking the **MicroK8s Terminal** link. Then, in a yellow window, run the following commands:
 
 ```sh
 sudo echo "--allow-privileged=true" >> /var/snap/microk8s/current/args/kube-apiserver
@@ -89,29 +89,31 @@ sudo systemctl restart snap.microk8s.daemon-apiserver.service
 
 When prompted for a ibmuser password, enter **engageibm**
 
+***
+
 1. To start the lab, you should be in your Cloud Pak for Multicloud Management Web Console. If you are not, check [here](../gettingstarted/) how to open your console page.
 
-  ![](images/2-cluster-mgmt-img.png)
+   ![](images/2-cluster-mgmt-img.png)
 
 2. Now, let's explore the Cluster view. Click the hamburger **Menu** (1) and select **Automated Infrastructure -> Clusters** (2).
 
-  ![](images/2020-09-17-19-58-15.png)
+   ![](images/2020-09-17-19-58-15.png)
 
 3. You can add a cluster by Importing an existing cluster or provisioning a new cluster using a Service Library. We use the first option. Select **Import an Existing cluster** (1) and click **Import** (2).
 
-  ![](images/2020-09-17-20-00-49.png)
+   ![](images/2020-09-17-20-00-49.png)
 
-4.  Enter **microk8s** for cluster name (1) and **microk8s** for namespace (2). Click **Generate command** to continue (3).
+4. Enter **microk8s** for cluster name (1) and **microk8s** for namespace (2). Click **Generate command** to continue (3).
 
-  ![](images/2020-09-17-20-26-25.png)
+   ![](images/2020-09-17-20-26-25.png)
 
-5. A curl command is generated that you will use to add the new cluster. Click **Copy command** button (1) and click **View cluster** (2) to see the new iks-cluster details page. Copy the generated command in a note, you will use it later.
+5. A curl command is generated that you will use to add the new cluster. Click **Copy command** button (1) and click **View cluster** (2) to see the new  managed cluster details page. 
 
-  ![](images/7-cluster-mgmt-img.png)
+   ![](images/7-cluster-mgmt-img.png)
 
 6. Go back to the desktop and open the terminal window to MicroK8s cluster clicking the **MicroK8s Terminal** link. 
 
-![](images/2020-09-17-20-30-28.png)
+   ![](images/2020-09-17-20-30-28.png)
 
 7. MicroK8s terminal has a yellow background. To verify the cluster status run the following command in the **MicroK8s** window
 
@@ -151,29 +153,30 @@ When prompted for a ibmuser password, enter **engageibm**
 
 12. Now you can see your managed cluster in a clusters list. You need to add labels to identify your new cluster. Labels are then used by the PlacementRules and PlacementPolicies to select clusters where different applications and policies should be deployed.
 
-In the [Cluster Management lab](../clustermgmt/index.mdx) you could learn how to add labels using a web console. Below you will use alternative methods of modifying labels using a CLI.
+    In the [Cluster Management lab](../clustermgmt/index.mdx) you could learn how to add labels using a web console. Below you will use alternative methods of modifying labels using a CLI.
 
-First, you need to install a multicluster plugin to the `cloudctl` command. Open the green terminal to the **Management Hub** and run the following commands
+    First, you need to install a multicluster plugin to the `cloudctl` command. Open the green terminal to the **Management Hub** and run the following commands
 
-```sh
-curl -kLo cloudctl-mc-plugin https://cp-console.apps.demo.ibmdte.net/rcm/plugins/mc-linux-amd64
-cloudctl login -a https://cp-console.apps.demo.ibmdte.net -u bob -p Passw0rd -n default
-cloudctl plugin install -f cloudctl-mc-plugin
-```
+    ```sh
+    curl -kLo cloudctl-mc-plugin https://cp-console.apps.demo.ibmdte.net/rcm/plugins/mc-linux-amd64
+    cloudctl login -a https://cp-console.apps.demo.ibmdte.net -u bob -p Passw0rd -n default
+    cloudctl plugin install -f cloudctl-mc-plugin
+    ```
 
-Now, you can manage your remote clusters with the cli. To list the labels for **microk8s** cluster, in a green **Management Hub** terminal run:
+    Now, you can manage your remote clusters with the cli. To list the labels for **microk8s** cluster, in a green **Management Hub** terminal run:
 
-```sh
-cloudctl mc describe cluster microk8s -n microk8s -c hub0
-```
+    ```sh
+    cloudctl mc describe cluster microk8s -n microk8s -c hub0
+    ```
 
-To add a new label **environment=QA** run the following command in a green **Management Hub** terminal
+    To add a new label **environment=QA** run the following command in a green **Management Hub** terminal
 
-```sh
-cloudctl mc label cluster microk8s environment=QA -n microk8s
-```
+    ```sh
+    cloudctl mc label cluster microk8s environment=QA -n microk8s
+    ```
 
-The remote Kubernetes cluster is now registered as a managed cluster. In the next step, you will deploy the cloud native monitoring to that mamnaged cluster.
+    The remote Kubernetes cluster is now registered as a managed cluster. In the next step, you will deploy the cloud native monitoring to that mamnaged cluster.
+
 ***
 
 ## Deploy cloud native monitoring
@@ -184,64 +187,65 @@ To deploy Kuberenetes data collector (also known as cloud native monitoring) com
 
 1. First, you need to label target cluster with **ibm.com/cloud-native-monitoring=enabled**. You can do this in web console, or run the following command in a green terminal titled **Management Hub**
 
-```sh
-cloudctl mc label cluster microk8s ibm.com/cloud-native-monitoring=enabled -n microk8s
-```
+   ```sh
+   cloudctl mc label cluster microk8s ibm.com/cloud-native-monitoring=enabled -n microk8s
+   ```
 
-![](images/2020-09-27-17-05-18.png)
+   ![](images/2020-09-27-17-05-18.png)
 
 2. Second, you need to add the target cluster namespace as a managed resource to your team. Again, you can do this in web console (Menu -> Administer -> Identity and access -> Teams tab, select the team 'operations', edit the Resources), or run the following command in a green terminal titled **Management Hub**
 
-```sh
-cloudctl iam resource-add operations -r crn:v1:icp:private:k8:mycluster:n/microk8s:::
-```
+   ```sh
+   cloudctl iam resource-add operations -r crn:v1:icp:private:k8:mycluster:n/microk8s:::
+   ```
 
-This command adds a namespace **microk8s** (this namespace was automatically created during cluster import and contains the cluster CRD) as a managed resource to the team **operations**. This operations triggers the deployment process of cloud-native-monitoring operator to the target cluster.
+   This command adds a namespace **microk8s** (this namespace was automatically created during cluster import and contains the cluster CRD) as a managed resource to the team **operations**. This operations triggers the deployment process of cloud-native-monitoring operator to the target cluster.
 
-You can check that the operator was deployed running the following commands in a yellow terminal connected to **MicroK8s** cluster
+   You can check that the operator was deployed running the following commands in a yellow terminal connected to **MicroK8s** cluster
 
-```sh
-kubectl get pods -n cp4mcm-cloud-native-monitoring
-```
+   ```sh
+   kubectl get pods -n cp4mcm-cloud-native-monitoring
+   ```
 
-![](images/2020-09-27-17-15-43.png)
+   ![](images/2020-09-27-17-15-43.png)
 
-3. Finally, you need to open the Monitoring module console as a user belonging to the operations team - user **bob** in our case. Select "hamburger" menu in the top-left corner and then **Monitor health** (2) and **Infrastructure monitoring**. 
-![](images/2020-09-27-17-21-27.png)
+3. Finally, you need to open the Monitoring module console as a user belonging to the operations team - user **bob** in our case. Select "hamburger" menu in the top-left corner and then **Monitor health** (2) and **Infrastructure monitoring**.
 
-If you are redirected to login page, login again as user **bob** with password **Passw0rd**. Eventually, you should see the **Resources** tab shown below:
+   ![](images/2020-09-27-17-21-27.png)
 
-![](images/2020-09-27-17-23-53.png)
+   If you are redirected to login page, login again as user **bob** with password **Passw0rd**. Eventually, you should see the **Resources** tab shown below:
 
-The page probably won't show any resources yet, because the process to install Kubernetes data collector was just started. You can check if it was successfully deployed running the previous command again (in yellow terminal).
+   ![](images/2020-09-27-17-23-53.png)
 
-![](images/2020-09-30-12-44-36.png)
+   The page probably won't show any resources yet, because the process to install Kubernetes data collector was just started. You can check if it was successfully deployed running the previous command again (in yellow terminal).
 
-When it is deployed, after 1-2 minutes you can refresh the browser, and you should see the view showing now all the resources from the managed cluster.
+   ![](images/2020-09-30-12-44-36.png)
 
-![](images/2020-09-27-17-32-27.png)
+   When it is deployed, after 1-2 minutes you can refresh the browser, and you should see the view showing now all the resources from the managed cluster.
 
-Click the **Kubernetes cluster**.
+   ![](images/2020-09-27-17-32-27.png)
 
-![](images/2020-09-27-17-34-20.png)
+   Click the **Kubernetes cluster**.
 
-Then click **microk8s**.
+   ![](images/2020-09-27-17-34-20.png)
 
-![](images/2020-09-27-17-35-36.png)
+   Then click **microk8s**.
 
-The next view, let you explore the metrics and events releated to the selected resource. On top, you can see the Event timeline (1) for wihich you can change the time window (from 30 minutes to 1 week). Deployment topology widget (2) shows how the specific resource is located within the cluster. 
+   ![](images/2020-09-27-17-35-36.png)
 
-![](images/2020-09-27-17-40-30.png)
+   The next view, let you explore the metrics and events releated to the selected resource. On top, you can see the Event timeline (1) for wihich you can change the time window (from 30 minutes to 1 week). Deployment topology widget (2) shows how the specific resource is located within the cluster. 
 
-If you hover over the numbers on the Timeline (1) you can see the details of the events. You can also click the 'How do I read this' link (2) on the Deployment topology to learn hot to use that widget.
+   ![](images/2020-09-27-17-40-30.png)
 
-![](images/2020-09-27-17-44-10.png)
+   If you hover over the numbers on the Timeline (1) you can see the details of the events. You can also click the 'How do I read this' link (2) on the Deployment topology to learn hot to use that widget.
 
-![](images/2020-09-27-17-45-38.png)
+   ![](images/2020-09-27-17-44-10.png)
 
-Feel free to explore other resources and their metrics. For example you can click the worker node icon on the Deployment topology widget.
+   ![](images/2020-09-27-17-45-38.png)
 
-![](images/2020-09-27-17-49-48.png)
+   Feel free to explore other resources and their metrics. For example you can click the worker node icon on the Deployment topology widget.
+
+   ![](images/2020-09-27-17-49-48.png)
 
 ***
 
@@ -251,50 +255,50 @@ On top of monitoring Linux worker nodes and basic Kubernetes objects Operations 
 
 1. To start, clone the git repository containing the yaml files needed to deploy the application. Using the green terminal window, run the following commands on the **Management Hub**
 
-```sh
-git clone https://github.com/dymaczew/charts
-cd charts
-```
+   ```sh
+   git clone https://github.com/dymaczew/charts
+   cd charts
+   ```
 
 2. Apply the application resources running the following commands:
 
-```sh
-/home/ibmuser/oclogin.sh
-oc apply -f bookinfo-multiclister-2020.2.0
-oc apply -f kubernetes-1.19-ingress-deployable.yaml
-```
+   ```sh
+   /home/ibmuser/oclogin.sh
+   oc apply -f bookinfo-multiclister-2020.2.0
+   oc apply -f kubernetes-1.19-ingress-deployable.yaml
+   ```
 
-The last command updates the ingress deployable for Kubernetes 1.19 version that is running on the your managed cluster (Ingress definition was changed in 1.19 and extended with new mandatory fields)
+   The last command updates the ingress deployable for Kubernetes 1.19 version that is running on the your managed cluster (Ingress definition was changed in 1.19 and extended with new mandatory fields)
 
-The output looks like the following:
+   The output looks like the following:
 
-![](images/2020-09-30-13-38-44.png)
+   ![](images/2020-09-30-13-38-44.png)
 
-Don't worry about the error in the last line - it just means that ImagePolicy admission controller is not used in the environment.
+   Don't worry about the error in the last line - it just means that ImagePolicy admission controller is not used in the environment.
 
 3. Now, let's edit the placement rule for the application to get it deployed on the managed cluster (we tagged in with label "environment=QA"). Navigate to application view, selecting the "hamburger" menu in the top-left corner, then **Observe environments** and **Overview**
 
-![](images/2020-09-30-13-48-03.png)
+   ![](images/2020-09-30-13-48-03.png)
 
-On the overview page, scroll down to the Applications section and select **bookinfo-app** link. We recommend this way, becasue for some reason (probably a bug?) the application is not listed directly on the Hybrid Applications list
+   On the overview page, scroll down to the Applications section and select **bookinfo-app** link. We recommend this way, becasue for some reason (probably a bug?) the application is not listed directly on the Hybrid Applications list
 
-![](images/2020-09-30-13-50-11.png)
+   ![](images/2020-09-30-13-50-11.png)
 
 4. When the Application view opens, click on the **bookinfo-rule** icon
 
-![](images/2020-09-30-13-51-45.png)
+   ![](images/2020-09-30-13-51-45.png)
 
 5. Edit the placement rule in the editor on the right, changing the value of the label from **Dev** to **QA** (1) and then apply you changes with the button on top of the editor(2)
 
-![](images/2020-09-30-13-56-39.png)
+   ![](images/2020-09-30-13-56-39.png)
 
 6. After a few seconds, you should notice that the application is now being placed on the **microk8s** cluster. The deployment takes usually 1-2 minutes needed to pull images and start containers.
 
-![](images/2020-09-30-18-55-48.png)
+   ![](images/2020-09-30-18-55-48.png)
 
 7. You can verify if the application was successfuly deployed and is accessible by opening a new browser tab and entering the URL: `bookinfo.10.0.0.2.nip.io`. You should reach the page that looks like below:
 
-![](images/2020-09-30-19-50-18.png)
+   ![](images/2020-09-30-19-50-18.png)
    
 ***
 
@@ -304,21 +308,21 @@ Cloud Pak for Multicloud Management is capable of monitoring the application ava
 
 1. Open the Monitoring module interface (Select "hamburger" menu, then **Monitor Health**, then **Infrastructure monitoring**). Then select the **Synthetic results** tab
 
-![](images/2020-09-30-20-01-54.png)
+   ![](images/2020-09-30-20-01-54.png)
 
 2. On the page Synthetic results page, you should see the automatically configured monitor for ingress deployed as a part of Bookinfo application. Click on the monitor name to explore details
 
-![](images/2020-09-30-20-03-37.png)
+   ![](images/2020-09-30-20-03-37.png)
 
 3. You can adjust the scope of the timeline, reducing the windows to last 30 minutes (1). You can also select to see a Response time graph or a response time Breakdown (2). This helps to diagnose issues related to name resolution on establishing the SSL session.
 
-![](images/2020-09-30-20-11-38.png)
+   ![](images/2020-09-30-20-11-38.png)
 
 4. When you scroll down you can see the results of actual tests. Select any dot on the graph to see detailed breakdown of the response.
 
-![](images/2020-09-30-20-13-53.png)
+   ![](images/2020-09-30-20-13-53.png)
 
-You can deploy more agents in different locations to have your applications tested for availability and response time from a customer perspective.
+   You can deploy more agents in different locations to have your applications tested for availability and response time from a customer perspective.
 
 ***
 
