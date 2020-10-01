@@ -360,32 +360,28 @@ Cloud Pak for Multicloud Management is capable of monitoring the application ava
     ```
 
     Answer the installation wizard with the following values:
-    <pre>
+    
+    ```sh
     You will configure a new local point of presence (PoP).
 
-    Enter a name for your PoP. Your PoP will be identified by this name: <span style="color:orange"><b>pop_user1</b> -- A point of presence name</span><br></br>
+    Enter a name for your PoP. Your PoP will be identified by this name: pop_user1 -- A point of presence name
     The PoP name is set to pop_user1
 
-
-    Enter the name of the country in which your PoP is located: <span style="color:orange"><b>USA</b> -- Use any country</span><br></br>
+    Enter the name of the country in which your PoP is located: USA -- Use any country
     The country name is set to USA
 
-
-    Enter the name of the city in which your PoP is located: <span style="color:orange"><b>Las Vegas</b> -- Use any city</span><br></br>
+    Enter the name of the city in which your PoP is located: Las Vegas -- Use any city
     The city name is set to Las Vega
 
-
-    Enter a description of your PoP (optional): <span style="color:orange"><b>pop_user1</b> -- It is just descritpion</span><br></br>
+    Enter a description of your PoP (optional): pop_user1 -- It is just descritpion
     The description is set to "pop_user1"
 
-
-    Enter the proxy server address for communicating with IBM ICAM server. The address format is ip:port (Press Enter if you do not need to use a proxy) :  <span style="color:orange">Press Enter</span><br></br>
+    Enter the proxy server address for communicating with IBM ICAM server. The address format is ip:port (Press Enter if you do not need to use a proxy) :  Press Enter
     Proxy server address for communicating with IBM ICAM server is set to 
 
+    Update the proxy type (no | manual | pac) for playbacking synthetic tests to monitor your web applications. Enter 'no' to choose no proxy. Enter 'manual' to configure your proxy with a proxy server ip address and port number. Enter 'pac' to use an automatic configuration URL. (Press Enter if you do not want to make any changes: no): Press Enter
 
-    Update the proxy type (no | manual | pac) for playbacking synthetic tests to monitor your web applications. Enter 'no' to choose no proxy. Enter 'manual' to configure your proxy with a proxy server ip address and port number. Enter 'pac' to use an automatic configuration URL. (Press Enter if you do not want to make any changes: no): <span style="color:orange">Press Enter</span><br></br>
     Playback proxy type is set to no
-
 
     Your PoP is configured with the following details:
     LOCATION="pop_user1,USA,Las Vegas,0,0,pop_user1"
@@ -396,9 +392,9 @@ Cloud Pak for Multicloud Management is capable of monitoring the application ava
     PLAYBACK_PROXY_CONFIG_URL=""
     CACHE_REDIS_MAX_SIZE_MB=""
 
-    Do you confirm? [y for yes or n for no]: <span style="color:orange">Press <b>'y'</b></span><br></br>
+    Do you confirm? [y for yes or n for no]: Press 'y'
     pop.properties is configured! You can run start-pop.sh to start your PoP.
-    </pre>
+    ```
 
     Finally, run the following command to start the agent:
 
