@@ -12,35 +12,8 @@ IBM Cloud Pak for Multicloud Management 2.0 on Skytap
 
 ## Cloud Pak for MCM Bootcamp
 
-This course is designed to enable developers with the latest tools and techniques for developing cloud native applications.
-
 The course materials can be viewed at- [https://pages.github.ibm.com/demohub/cp4mcm20-skytap/](https://pages.github.ibm.com/demohub/cp4mcm20-skytap/)
 
-
-```
-git clone
-```
-
-### Install dependencies
-
-```
-npm install
-```
-
-### Publish Content
-
-Currently, the content is published to the GitHub pages site through the `gh-pages` branch
-using the `gh-pages` npm module. All of the details for handling the publishing are covered within
-the deploy script. The deploy can be run using the following:
-
-```
-npm run deploy
-```
-
-The result of the `deploy` can be viewed here - https://pages.github.ibm.com/demohub/cp4mcm20-skytap/
-
-**Note:** There is a time delay between when the deploy process completes and when the
-content is available on the published site.
 
 ### Contributors
 
