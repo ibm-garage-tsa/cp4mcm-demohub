@@ -1,0 +1,326 @@
+---
+title: Lab 5 - Event Management and Runbook Automation with IBM Cloud Pak for Multicloud Management
+description:
+---
+
+<FeatureCard
+  title="Event Management and Runbook Automation with IBM Cloud Pak for Multicloud Management"
+  color="dark"
+  >
+
+![banner](/images/automation-banner.jpg)
+
+</FeatureCard>
+
+
+<AnchorLinks>
+  <AnchorLink>Lab Overview</AnchorLink>
+  <AnchorLink>Prerequisite</AnchorLink>
+  <AnchorLink>Business Context</AnchorLink>
+  <AnchorLink>Create Online Banking support group</AnchorLink>
+  <AnchorLink>Configure Slack integration</AnchorLink>
+  <AnchorLink>Define Incident Policy</AnchorLink>
+  <AnchorLink>Configure Ansible Tower</AnchorLink>
+  <AnchorLink>Configure Runbook automation</AnchorLink>
+  <AnchorLink>Test runbook automation</AnchorLink>
+</AnchorLinks>
+
+***
+
+## Lab Overview
+
+IBM Cloud Pak for Multicloud Management is the enterprise-grade multicloud management solution. This cloud-agnostic solution leverages open-source technology and your existing tools to provide an integrated dashboard to manage your environments and your applications where they need to reside - public, private, or edge - with choice of vendor cloud platform and consistent visibility, governance and automation.
+
+Event Management installed along with Monitoring module of the Cloud Pak gives you the capability to automate management of incidents and events that are associated with resources and applications. You can visualize and manage multiple clusters, and consolidate the information from your monitoring systems to address problems. Events can indicate something that happened on an application, service, or another monitored object. All events that are related to a single application, or to a particular cluster, are correlated with an incident. Event Management can receive events from various monitoring sources, either on-premises or in the cloud.
+
+In this lab, you are the leader of the Operations team, responsible for problem resolution. You define how your team is notified in the event of a failure and define a "runbook" guide of possible remediation steps.
+
+In this tutorial, you will explore the following key capabilities:
+- `Create a policy that automatically assigns incidents to alert over Slack`
+- `Generate sample events to verify that your new policy works as expected`
+- `Use the runbook suggested to the incident to resolve it`
+
+***
+
+## Prerequisite
+
+- You need to provision your own copy of the CP4MCM 2.0 environment, start it and verify for correct startup (check [here](../../gettingstarted/)).
+
+***
+
+## Business Context
+
+In a real-world environment, an operator isn't going to continually watch the overview screen, waiting for new events or failures. This is where the event management capability comes in, which not only notifies operators when failure conditions occur but can also provide automated and guided remediation of error events.
+
+In this tutorial, you will log in to the Hub cluster to configure and use event management capabilities.
+
+You will complete the following tasks:
+
+-	Create Online Banking support group
+- Configure Slack integration
+- Define Event Policy
+- Define Incident Policy
+- Configure Ansible Tower
+- Configure Runbook automation
+- Test runbook automation
+
+***
+
+## Create Online Banking support group
+
+In this exercise, your task is to configure event management for handling events related to the Online Banking application.
+
+1. To start the lab, you should be in your Cloud Pak for Multicloud Management Web Console. If you are not, check [here](../gettingstarted/) how to open your console page.
+
+  ![](images/2-cluster-mgmt-img.png)
+
+2. Now, let's open the Monitoring module user inteface. Click the hamburger **Menu** and select **Monitor health -> Incidents**.
+
+   ![](images/2020-10-02-12-09-36.png)
+
+3. To effectively handle incidents at scale, they must be automatically dispatched to the right users for handling. The first step is to create a group for users who will be responsible for handling Online Banking related events and incidents.Click the **Administration** tab (1) and then **Users and groups** (2)
+
+   ![](images/2020-10-02-13-29-30.png)
+    
+4. Notice that some users have already been defined. There are the users with ClusterAdministrator role that were automatically assigend **Operations lead** role in the Monitoring module. Before we create support group, let's start with adding a user to the system. The demo environment has an LDAP configured, so you will import user from the LDAP.
+   
+5. Open the humburger **Menu** and select **Administer -> Identity and Access**
+
+   ![](images/2020-10-02-14-18-53.png)
+   
+6. Select **Teams** tab and then click on the **operations** team
+
+   ![](images/2020-10-02-14-20-56.png)
+
+   ![](images/2020-10-02-14-21-24.png)
+
+7. Select the **Users** tab (1) , and then click **Add users** (2)
+
+   ![](images/2020-10-02-14-23-21.png)
+
+8. In the **Select domain** dropdown pick **my_ldap**. This dropdown shows all identity sources registered in the Cloud Pak. In this environment, there are two sources available: a default Openshift authentication (Cloud Identity Directory) and LDAP connection my_ldap.
+
+   ![](images/2020-10-02-14-26-15.png)
+
+9. In the search box, enter **carlos** and hit Enter (1). Then, select the user **carlos** (2), change the role to **Editor** (3), and finally click **Add** button (4).
+
+   ![](images/2020-10-02-14-29-23.png)
+
+10. Now, go back to the Monitoring UI (Menu-> Monitor health-> Incidents-> Administration -> Users and Groups). You should see user `carlos` in the list with the role `Operations engineer`. This is default mapping of Cloud Pak role `Editor` to the Monitoring module roles. Click **Groups** tab
+
+   ![](images/2020-10-02-13-59-16.png)
+ 
+11.	There are no groups defines so you need to create one. Click **New group**.
+
+12. Provide the name **Online Banking Support** (1), then click Users icon (2), select user **carlos** (3) and click **Assign**
+
+    ![](images/2020-10-02-14-41-30.png)
+  
+13.	Finally, click **Save**
+
+    ![](images/2020-10-02-14-43-12.png)
+
+    Now, when you have the right support group defined, let's configure which incidents should be assigned to this group and how the users should be notified.
+
+***
+
+## Configure Slack integration
+
+Operation teams use different notification methods. Some prefer emails, but many uses collaboration tools like PagerDuty, Slack or Microsoft Teams. In this exercise you will configure integration with Slack.
+
+1. Go back to the **Administration** view.
+
+    ![](images/2020-10-02-14-48-36.png)
+
+2. Select **Integrations** tile
+
+   ![](images/2020-10-02-15-10-44.png)
+
+3. On the Integrations view, select **Outgoing** tab (1) and then click **New integration** (2)
+
+   ![](images/2020-10-02-15-12-56.png)
+
+4. You can see multiple default integartions provided by Cloud Pak for Multicloud Management. If your company is not using any of the pre-defined ones, you can use the Generic webhook. In this exercise you will configure Slack so select **Slack** tile.
+
+   ![](images/2020-10-02-15-15-10.png)
+
+5. Provide the integration name (e.g. **slack**) (1) and then the webhook created in the Slack channel (2). For convenience, we have created a slack channel for you so you can reuse the following webhook URL:
+
+   ```sh
+   https://hooks.slack.com/services/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
+   ```
+
+   Finally click **Save** (3) to create the integration.
+
+   ![](images/2020-10-02-15-21-26.png)
+
+6. Now, go back to the Incoming integrations tab. You can see that along with the configured integrations, there is an additional tile for generating **Sample events**.
+ 
+   Sample events are artificial events that are injected into the system to demonstrate some capabilities but are also very helpful for testing policies and runbook automation. Click **Generate**. 
+   If you wait for about a minute you should see the following notification.
+ 
+If you cannot see the notification or see an error, follow the tutorial as the events were probably generated anyway.
+
+
+***
+
+## Overview of the managed environments
+
+In this section, you visualize key information about your managed environments in a Cloud Pak for Multicloud Management dashboard.
+
+1. With IBM Cloud Pak for Multicloud Management you are able to manage all your environments from a single control panel. Open the **Menu** button (1) and click **Observe environments** (2) > **Overview** (3).
+
+  ![](images/22-cluster-mgmt-img.png)
+
+2. The Overview menu option displays the status of all clusters including the health and resource metrics. The top section shows the operations details across all your cloud providers. In the first section, you can see information about cloud providers, compute resources, applications and infrastructure. Because your both clusters are completely new, you don't have a lot of information here. But in a real production environment here is your starting point to explore your multiple clusters.
+
+  ![](images/2020-09-17-20-55-29.png)
+
+3. Scroll down to the bottom section showing Resource Overview. Here you can see Cluster Compliance status, Cluster status, CPU, Memory, and Storage Resource View.
+
+  ![](images/2020-09-17-20-56-29.png)
+
+4. Now, navigate to the **Applications** page. Select "hamburger" menu in the top-left corner and then (1) **Manage applications** and (2) **Hybrid applications**.
+
+   ![](images/2020-09-17-21-11-52.png)
+
+   By now, you don't have any application here. But it is important to know, that in this area, you will see information about the deployment of an application. Don’t worry about it now, you will explore it later.
+
+5. Now, let’s explore a really good feature of Cloud Pak for Multicloud Management: Visual Web Terminal. On the top right navigator, click on **Visual Web Terminal** button.
+
+  ![](images/2020-09-17-21-13-10.png)
+
+6. You can use the Visual Web Terminal to run many commands across your environment. When categorized data is returned, such as when you enter a search command, it is returned in an interactive tabular format.
+
+  The Visual Web Terminal is particularly useful when troubleshooting issues that require running multiple commands and navigating the results of the commands in an easy way. Let’s try something simple! Enter the command bellow:
+
+   ```
+   oc project multicluster-endpoint
+   ```
+
+   ```
+   oc get pods
+   ```
+
+  ![](images/2020-09-17-21-33-24.png)
+
+  The information that is provided in the Visual Web Terminal is limited by the permissions of the user. When you run a command, only the items that you have permission to view are displayed. You can click on any row in the displayed table (3) and then explore the details of the specific resource - for example Events (4)
+
+  Next section, you learn how to deploy an application to the local or remote cluster.
+
+***
+
+## Deploy an Application
+
+In this step, you install a helm chart from the catalog to your hub-cluster and your managed-roks cluster. Let's do it!
+
+1. Open the **Menu** (1) and click on **Administer** (2) > **Helm repository** (3).
+
+  ![](images/2020-09-18-15-56-01.png)
+
+2. On the Helm Repositories page, click **Add Repository** to register a new Helm Repository.
+
+  ![add repository](images/2020-09-18-16-00-28.png)
+
+3. Enter **dte-charts** (1) as repository Name, and enter **https://raw.githubusercontent.com/dymaczew/charts/master/repo/incubator** as URL (2). Click **Add** (3).
+
+  ![repo add dialog](images/2020-09-18-16-02-55.png)
+
+4. After few seconds, you should see Sync Status as **Completed** (1). Now, let’s deploy an application from this new Helm repository. Click **Catalog** (2) on upper right corner of the page to view the list of helm charts that you can deploy.
+
+  ![helm repo added](images/2020-09-18-16-05-20.png)
+
+5. Search for **mod** (1) and select **modresortapp** (2) application.
+
+  ![modresortapp](images/2020-09-18-16-07-07.png)
+
+6. The chart deploys a simple Liberty web application for demonstration purposes. Select **Configure** to continue.
+
+  ![configure](images/2020-09-18-16-08-32.png)
+
+7. Enter **demo** as Helm release name (1), select **default** as Target namespace (2). On Target cluster, select the **local-cluster** (3). Then click **Install** (4).
+
+  ![install](images/2020-09-18-16-12-42.png)
+
+8. The installation starts immediately but it takes a few minutes to deploy the application to remote cluster. Click **View Helm Releases** to view the status.
+
+  ![](images/2020-09-18-16-14-00.png)
+
+9. On the Helm releases page, you can check that **demo** helm is deployed to your Hub cluster.
+
+  ![](images/2020-09-18-16-15-10.png)
+
+10. Now, go back to the **Hybrid applications** menu ("hamburger" -> Manage Applications -> Hybrid Applications). You can notice that now it shows your just deployed application. Click the **demo-modresrtapp** application.
+
+  ![](images/2020-09-18-16-27-52.png)
+
+11. You should see the details of the sample application, as shown below. Click on any of the icons to see the details of each object. 
+
+  ![](images/2020-09-18-16-38-53.png)
+
+12. Click the **demo-modresortapp** placement rule (1) and notice that it defines the placement of the application to the clusters with label **environment=Dev** (2). It also specify that one instance of the application should be deployed in case more clusters is labeled this way.
+    
+  ![](images/2020-09-18-16-43-05.png)
+
+13. Let's modify the target cluster. Edit the label in the yaml file on the right (1) changing the **Dev** to **QA** and apply the changes with the **Update** icon (2)
+
+  ![](images/2020-09-18-20-22-10.png)
+
+14. In a short time you should notice that the placement rule change is picked by the system and the different target cluster is designeted as a target for deployment.
+
+  ![](images/2020-09-18-20-25-11.png)
+
+15. Let's verify that the application is actually running on MicroK8s cluster. Go back to the yellow **MicroK8s** terminal windows and run the following commands:
+
+  ```sh
+  oc get pods -n default
+  oc get service -n default
+  ```
+
+  ![](images/2020-09-18-20-27-03.png)
+
+16. Notice the **Node port** used by the service. In the example screenshot it is `31946`
+
+  ![](images/2020-09-18-20-28-29.png)
+
+17. Go back to your browser window, open a new tab and provide the following URL `http://microk8s.demo.ibmdte.net:[port-number-from-previous-step]/resorts`
+    
+  ![](images/2020-09-18-20-31-41.png)
+
+18. Great! Your Liberty application is available on your managed cluster. 
+
+  This application is really a simple sample, just to show you how easy is to install an application from the catalog in multiple clusters. In our next lab you will deploy a hybrid application learning details about Application Management deployment using channels and subscriptions concepts.
+
+***
+
+## Manage Cluster Objects
+
+You can use the management console to create, manage, view details, and troubleshoot application resources and Kubernetes objects in all clusters from a single interface. The management console search page supports searching for application resources by the component kind for each resource.
+
+1. Back to the IBM Cloud Pak for Multicloud Management web page tab, click on the **Search** button.
+
+  ![](images/46-cluster-mgmt-img.png)
+
+2. The Search menu gives access to application resources and Kubernetes objects across all managed clusters. It is really powerful feature allowing you to easily find any resource in your IT infrastructure - no matter where it is actually located - public or private cloud. The Search overview screen displays commonly used search filters - a pre-defined templates to view workloads, unhealthy pods and workloads created in last hour. You can also create and save your own search filters. Click on **Created Last Hour** button.
+
+  ![](images/47-cluster-mgmt-img.png)
+
+3. If you scroll down to the **Pod** section, you should see the **demo-modresort** pod that you created earlier in the list along with other pods. You can also provide the search criteria in the filter section. For example: type `kind` and select **pod**, provide the `modresort` as search string and specify `status` as **Running**.
+
+  ![](images/2020-09-18-20-39-41.png)
+
+  Congratulations! You have successfully completed the lab “Multicluster Management with IBM Cloud Pak for Multicloud Management”.
+
+***
+
+## Summary
+
+You completed the Cloud Pak for Multicloud Management tutorial: Multi-cluster Management. Throughout the tutorial, you explored the key takeaways:
+- `Understand Cloud Pak for Multicloud Management`;
+- `Add a managed cluster`;
+- `Deploy an application`;
+-	`Manage and monitor application resources of local and remote clusters`;
+
+If you would like to learn more about Cloud Pak for Multicloud Management, please refer to:
+-	<a href="https://www.ibm.com/cloud/cloud-pak-for-management" target="blank">Cloud Pak for Multicloud Management home page</a>
+- <a href="https://www.ibm.com/demos/collection/Cloud-Pak-for-Multicloud-Management" target="blank">Cloud Pak for Multicloud Management Demos </a>
