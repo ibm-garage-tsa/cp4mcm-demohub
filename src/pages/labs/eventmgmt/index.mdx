@@ -223,10 +223,97 @@ Operation teams use different notification methods. Some prefer emails, but many
 
 ## Configure Ansible Tower
 
+   In this section you will configure Ansible Tower. With Red Hat® Ansible® Tower you can centralize and control your IT infrastructure with a visual dashboard, role-based access control, job scheduling, integrated notifications and graphical inventory management. Ansible Tower is embeded into Cloud Pak for Multicloud Management to drive automation of event response with runbooks and is also used for configuration and compliance automation within infrastructure module.
 
+1. Open a new browser tab and use the Ansible bookmark to open Ansible Tower interface.
+
+   ![open ansible tower](images/2020-10-10-11-23-27.png)
+
+2. Provide `admin` as username and paste the password using Skytap stored credentials.
+
+   ![ansible credentials](images/2020-10-10-11-27-02.png)
+
+3. First, you need to define a credentails to be used with the target environments. Select **Credentials** from the menu and then click '+' sign to add new credentials.
+
+   ![new credentials](images/2020-10-10-11-44-54.png)
+
+   You will add 2 different type of credentials. First let's add a credentials to the vcenter that allows Asnible Tower to collect data from the Vmware vSphere environment. Later, you will add credentials to specific virtual machines, to allow running Ansible playbooks on these VMs using ssh.
+
+4. Provide a name (e.g. `vcenter`) (1), select the Organization `Default` (2), then select the **Credential type** lookup (3) to pick the **Vmware vCenter** option (5) available on the last tab of the list (4). Then click **Select**.
+
+   Then, provide `10.0.0.100` as **Vcenter Host**, `administrator@vsphere.local` as **Username** and `P@ssw0rd` as **Password**. Finally, click **Save**.
+
+   ![](images/2020-10-10-12-13-27.png)
+
+5. To add the second credentials, click the '+' sign again, and provide name (e.g. `ubuntu`). This time select type `Machine` and provide `ibmuser` as **Username** and `passw0rd` as **Password**. You can notice it is also possible to provide the SSH key as a credentials, but you won't use this method in this tutorial. Scroll down and click **Save**.
+
+   ![](images/2020-10-10-12-22-22.png)
+
+6. Now, let's add new Inventory. In the menu select **Inventories**.
+
+   ![](images/2020-10-10-11-29-08.png)
+
+7. An Inventory is a collection of hosts against which jobs may be launched. To create automation you must first define a set of target hosts as Inventory and assign the credentials that Ansible will use to connect to the target system. You can define a static inventory for a well known hosts in your infrastructure, as well as dynamic inventory that will be automatically populated with the virtual machines provisioned in a public or private cloud. Let's start with dynamic one. Click '+' sign on the right and select **Inventory** to create a new inventory.
+
+   ![](images/2020-10-10-11-32-46.png)
+
+   Provide the name `vmware` and click **Save**
+
+   ![](images/2020-10-10-12-37-23.png)
+
+   Now, select **Sources** tab (1) and click '+' sign (2) to add new source.
+
+   ![](images/2020-10-10-12-38-37.png)
+
+   Provide a name (e.g. `vcenter`) and select **Source** `VMware vCenter`.
+
+   ![](images/2020-10-10-12-40-14.png)
+
+   Credentials `vcenter` should be populated automatically, as there is only one entry of this type defined. If you have defined more, select the credenitals defined in step 4 above. Then, click **Save**
+
+   ![](images/2020-10-10-12-42-38.png) 
+
+8. On the Sources view, select the **Sync** icon (1) to pull inventory details from Vmware environment. When the sync job completes, you should see a green cloud icon next to the source name (2).
+
+   ![](images/2020-10-10-16-06-51.png)
+
+9. Now, add the static inventory for other hosts. Add new inventory but this time provide the name `static` and instead of sources tab, select `hosts`.
+
+
+
+
+   
 ***
 
 ## Configure Runbook automation
+
+   Runbooks are automated, semi-automated, or manual procedures capturing the organizational knowledge of how to diagnose and resolve different types of incidents. IBM Cloud Pak for Multicloud Management allows you to define and use runbooks, leverage automation through scripts but also integrate with multiple automation tools, like Ansible Tower or BigFix. In this section, you explore these capabilities.
+
+1. You should be in the Administration view. Click **Runbooks** tile
+
+   ![runbooks tile](images/2020-10-09-17-24-24.png)
+
+2. Click **Connections** tab. Connections let you define automation tools that you want to use in your runbooks. Here you will define a connection to Ansible Tower
+
+   ![](images/2020-10-09-17-25-49.png)
+
+3. Click **Configure** under the Ansible Tower tile.
+
+   ![](images/2020-10-09-17-26-56.png)
+
+4. Enter Asible Tower URL: `https://ansible-tower-web-svc-ansible-tower.apps.demo.ibmdte.net`, provide `admin` as user and insert the password using the stored credentials from the Skytap menu. Finally click **Save**.
+
+   ![](images/2020-10-09-17-30-52.png)
+
+5. If you entered the credentials and URL correctly, you should see the green checkmark next to the **Connected** shown under Ansible Tower tile.
+
+   ![](images/2020-10-09-17-32-59.png)
+
+6. Now select the **Automations** tab and click **New automation**.
+
+   Automations are predefined tasks that can be invoked by the operator manually during the incident or executed automatically in response to the incoming events. 
+
+
 
 ***
 
