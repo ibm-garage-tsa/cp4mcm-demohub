@@ -1,6 +1,6 @@
 
 <h1 align="center">
-IBM Cloud Pak for Multicloud Management 2.0 on Skytap
+IBM Cloud Pak for Multicloud Management 2.x on Skytap
 </h1>
 
 <p align="left">

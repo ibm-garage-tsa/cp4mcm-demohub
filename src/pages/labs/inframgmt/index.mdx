@@ -51,7 +51,9 @@ In this tutorial, you will explore the following key capabilities:
 
 ## Business Context
 
+In the hybrid environments there is often need to provision services that are a mix of systems and services running in multiple target environments. While new cloud-native applications may be fully containerized and run on the Kubernetes clusters, in case of modernized legacy applications usually some parts are still running on a Virtual Machines. IBM Cloud Pak for Multicloud Management allows you to automate provisioning of virtual machines as a part of hybrid applications. It also provides you the means to manage virtual machine lifecycle and compliance, as well as report the usage of shared resources in a form of chargback reports.
 
+  [To Be Completed]
 
 You will complete the following tasks:
 -	Define a connection to Vmware vSphere environment
@@ -89,13 +91,38 @@ In this section, you will define a connection to the Vmware vSphere environment.
 
   ![](images/2020-10-16-12-55-18.png)
 
+5. Before you will be able to exercise any of the templates that are pre-loaded in the service library, you have to define a connection to the target environment. In this demo scenario it is Vmware vCenter. Click hamburger menu in the top-left corner (1) and select **Manage -> Cloud connections**
 
+   ![](images/2020-10-16-14-30-51.png)
 
- tbc.
+6. Click **Create connection** button to add a new connection.
 
-  Great, you connected Infrastructure management to your target environment. Let's move to the next section.
+   ![](images/2020-10-16-14-40-06.png)
+
+   Provide the following details:
+
+   - cloud provider: `VMware vSphere`
+   - Connection name: `vcenter`
+   - vCenter user: `administrator@vsphere.local`
+   - vCenter password: `P@ssw0rd`
+   - vCenter host: `10.0.0.100`
+
+   When ready click **Create** at the bottom.
+
+   ![](images/2020-10-16-14-46-49.png)
+
+   If the details are entered correctly, you should see the **Success** message shown below. Click **Save**.
+
+   ![](images/2020-10-16-14-48-50.png)
+
+   Great, you connected Infrastructure management to your target environment. Let's move to the next section.
+
+   ![](images/2020-10-16-14-50-07.png)
 
 ***
+
+## 
+
 
   Congratulations! You have successfully completed the lab “Infrastructure Management with IBM Cloud Pak for Multicloud Management”.
 
