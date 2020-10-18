@@ -18,6 +18,7 @@ description:
   <AnchorLink>Prerequisite</AnchorLink>
   <AnchorLink>Business Context</AnchorLink>
   <AnchorLink>Define a connection to Vmware vSphere environment</AnchorLink>
+  <AnchorLink>Define a shared parameter instance</AnchorLink>
   <AnchorLink>Summary</AnchorLink>
 </AnchorLinks>
 
@@ -45,7 +46,7 @@ In this tutorial, you will explore the following key capabilities:
 
 ## Prerequisite
 
-- You need to provision your own copy of the CP4MCM 2.0 environment, start it and verify for correct startup (check [here](../../gettingstarted/)).
+- You need to provision your own copy of the CP4MCM 2.x environment, start it and verify for correct startup (check [here](../../gettingstarted/)).
 
 ***
 
@@ -53,13 +54,20 @@ In this tutorial, you will explore the following key capabilities:
 
 In the hybrid environments there is often need to provision services that are a mix of systems and services running in multiple target environments. While new cloud-native applications may be fully containerized and run on the Kubernetes clusters, in case of modernized legacy applications usually some parts are still running on a Virtual Machines. IBM Cloud Pak for Multicloud Management allows you to automate provisioning of virtual machines as a part of hybrid applications. It also provides you the means to manage virtual machine lifecycle and compliance, as well as report the usage of shared resources in a form of chargback reports.
 
-  [To Be Completed]
+Cloud Pak for Multicloud Management provide 2 main ways to provision new infrastructure. First, leverages the provioning capabilities of ManagedIQ project and built-in providers. Second, uses the Terraform infrastructure-as-Code approach. You can any of these 2 methods or both - depending on the use case.
 
-You will complete the following tasks:
+For the Terraform provisionig part you will complete the following tasks:
 -	Define a connection to Vmware vSphere environment
--	Import the provisioning template
+-	Define a shared parameter data object
 -	Define a new service for VM provisioning
-- Provision new service instance
+- Test new service provisioning
+- Define a new service plan
+- Publish a service to the catalog
+
+For the ManagedIQ/CloudForm provisionig part you will complete the following tasks:
+- Define a new dialog
+- Define a Self-service catalog and new catalog item
+- Request a new service
 -	Defina and apply compliance policy for a new VM service
 -	Define a chargeback report for VMs
 
@@ -121,8 +129,39 @@ In this section, you will define a connection to the Vmware vSphere environment.
 
 ***
 
-## 
+## Define a shared parameter instance
 
+   To provision new VMs using a terraform usually user has to provide multiple parameters that are required by VMware vSphere environment. Cloud Pak for Multicloud Management let you pre-define those parameters so users won't be required to specify them every time they request a service. This is done by defining a shared parameter data object.
+
+1. Open the hamburger menu and select **Manage -> Shared parameters**.
+
+   ![](images/2020-10-18-15-09-36.png)
+
+2. On the top of the screen you will see a definition of shared parameters data types. These type defines what attributes the shared parameter object contains - usually they are defined to match the parameters required by terraform providers. Scroll down to the **Data objects** section which holds the defined instances of shared parameters, and click the **Create data object button**.
+
+   ![](images/2020-10-18-15-11-30.png)
+
+3. On the naxt page, provide the following details:
+
+   - Data Type: `vsphere_managed_inventory_definition`
+   - Data Object Name: `ubuntu`
+   - Datacenter Name: `Datacenter`
+   - Resource Pool Name: `dte-demo`
+   - Virtual Machine Folder Name: `DTE`
+   - Virtual Machine Image Template Name: `ubuntu`
+   - Virtual Machine Domain Name: `demo.ibmdte.net`
+   - Virtual Machine Template User Name: `ibmuser`
+   - Virtual Machine Template User Password: `passw0rd`
+   - Datastore Name: `datastore2`
+   - Network Name: `VM Network`
+   - DNS Servers: `10.0.0.201`
+   - DNS Suffixes: `demo.ibmdte.net`
+   - IPv4 Gateway: `10.0.0.254`
+   - IPv4 Netmask (CIDR): `24`
+
+   When finished click **Create** at the bottom.
+
+   *to be continued...*
 
   Congratulations! You have successfully completed the lab “Infrastructure Management with IBM Cloud Pak for Multicloud Management”.
 
@@ -131,10 +170,10 @@ In this section, you will define a connection to the Vmware vSphere environment.
 ## Summary
 
 You completed the Cloud Pak for Multicloud Management tutorial: Multi-cluster Management. Throughout the tutorial, you explored the key takeaways:
-- `Understand Cloud Pak for Multicloud Management`;
-- `Add a managed cluster`;
-- `Deploy an application`;
--	`Manage and monitor application resources of local and remote clusters`;
+-	`Understand Cloud Pak for Multicloud Management Infrastructure Management capabilities`;
+-	`Learn how to define a new service for VM provisioning`;
+- `Learn how to provision new VM service`;
+-	`Learn how to apply configuration and control policies to the managed VMs`;
 
 If you would like to learn more about Cloud Pak for Multicloud Management, please refer to:
 -	<a href="https://www.ibm.com/cloud/cloud-pak-for-management" target="blank">Cloud Pak for Multicloud Management home page</a>
