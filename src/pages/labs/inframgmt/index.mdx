@@ -56,6 +56,13 @@ In the hybrid environments there is often need to provision services that are a 
 
 Cloud Pak for Multicloud Management provide 2 main ways to provision new infrastructure. First, leverages the provioning capabilities of ManagedIQ project and built-in providers. Second, uses the Terraform infrastructure-as-Code approach. You can any of these 2 methods or both - depending on the use case.
 
+For the ManagedIQ/CloudForms provisionig part you will complete the following tasks:
+- Define a new dialog
+- Define a Self-service catalog and new catalog item
+- Request a new service
+-	Defina and apply compliance policy for a new VM service
+-	Define a chargeback report for VMs
+
 For the Terraform provisionig part you will complete the following tasks:
 -	Define a connection to Vmware vSphere environment
 -	Define a shared parameter data object
@@ -64,14 +71,156 @@ For the Terraform provisionig part you will complete the following tasks:
 - Define a new service plan
 - Publish a service to the catalog
 
-For the ManagedIQ/CloudForm provisionig part you will complete the following tasks:
-- Define a new dialog
-- Define a Self-service catalog and new catalog item
-- Request a new service
--	Defina and apply compliance policy for a new VM service
--	Define a chargeback report for VMs
+***
+
+## Explore the Infrastructure management interface
+
+1. To start the lab, you should be in your Cloud Pak for Multicloud Management Web Console. If you are not, check [here](../gettingstarted/) how to open your console page.
+
+  ![](images/2-cluster-mgmt-img.png)
+
+2. Now, let's explore the Infrastructure Management view. Click the hamburger **Menu** (1) and select **Automate Infrastructure -> Infrastructure Management** (2).
+
+  ![](images/2020-10-16-12-04-59.png)
+
+3. The new browser tab opens, and because there is a Single-Sign-On configured between the Cloud Pak Core and Infrastructure management module, you should get automatically logged in.
+
+  ![](images/2020-10-16-12-01-41.png)
+
+   The dashboard shows summary of the information regarding the connected providers. In this environment, there is only 1 provider used - Vmware vSphere, but you could connect many other target environments - including Openstack, Microsoft SC VMM or public clouds, like AWS, Azure, GKE, etc. This user interface was inherited from the former Red Hat CloudForms and is a commercial, supported version of the open source project ManagedIQ. This modules uses Ansible to discover the VMs in the managed providers and apply configuration and control policies. It also collects the usage data needed for chargeback reports, allowing you to divide costs of shared infrastructure among different consumers - application owners, business units or departaments.
+
+4. The provider for the VMware vSphere was already defined in the environment - to explore details select **Compute -> Infrastructure -> Providers**.
+
+   ![](images/2020-10-19-12-25-10.png)
+
+   Click on a `vcenter` provider.
+
+   ![](images/2020-10-19-12-29-58.png)
+
+   On the details page, you can notice that the authentication status for the provider is OK (1), and that there is one host in the target cluster (2) and four virtual machines (3).
+
+   ![](images/2020-10-19-12-31-24.png)
+
+   You can click on the **4 VMs** icon (3) to go to the details of virtual machines.
+
+   ![](images/2020-10-19-12-33-43.png)
+
+   Here you can explore the details of each individual Virtual Machine, as well as take lifecycle management actions. You can for example provision a new VM, clone or retire any of the existing ones. Since you are in an administrator role you have access to all functions. However normal users won't have that level of access, so let's create for them an offering in a self-service catalog so they will be able to provision a new VM when needed.
 
 ***
+
+## Define a new dialog
+
+To expose any offering in a catalog you have to first define a user interface for that offering - in our case it will be a dialog window allowing the end-user to specify the service name and virtual machine name.
+
+1. In the left-side menu select **Automation -> Automate -> Customization**.
+
+   ![](images/2020-10-19-12-40-09.png)
+
+2. Here you can see and customize all the dialogs defined in the systems, modifying the fields, providing additional validation or default values. In our case, let's define a new service dialog. Open the **Service Dialogs** section. Then select the **Configuration** and **Add a new Dialog** option.
+
+   ![](images/2020-10-19-12-43-37.png)
+
+   ![](images/2020-10-19-12-45-24.png)
+
+3. Hover cursor over the **New tab** and select the pencil icon that shows up.
+
+   ![](images/2020-10-19-12-48-02.png)
+
+   Change the label of the tab to **General**. Then in a similar way change the label of the **New section** to **Settings**. Then, drag the new **Text box** from the palette to the section details field.
+
+   ![](images/2020-10-19-12-51-35.png)
+
+   Change the field label to **Service Name** and name to **service_name**. On the **Options** tab select the **Value type** to be **String**. Then click **Save**. Repeat the operation for a second text box, this time providing **VM name** as a label and **vm_name** as a name.
+
+   Finally, provide the **Provision VM** as a dialog's name (1) and click **Save** (2).
+
+   ![](images/2020-10-19-13-03-33.png)
+
+   You have just created a very simple dialog, that allows end-user to customize service name and virtual machine name. You have seen the palette is much richer, using this functionality you can create a sophisticated, multi-tab dialogs with validation for more complex offerings.
+
+   ![](images/2020-10-19-13-21-32.png)
+
+***
+
+## Define a Self-service catalog and new Catalog Item
+
+   In this step you will define a new catalog and catalog item in to be shown in the Self-service catalog of the users in your organization.
+
+1. Start selecting the **Services -> Catalogs** from the left-side menu.
+
+   ![](images/2020-10-19-13-24-16.png)
+
+2. Open the **Catalogs** section, and click **Configuration -> Add a New Catalog** option. Provide **Virtual Machines** as a name and click **Add**.
+
+   ![](images/2020-10-19-13-27-14.png)
+
+3. Now, open the **Catalog Items** section, and again click **Configuration -> Add a New Catalog Item**. Then, select the **Vmware** as Catalog Item Type.
+
+   ![](images/2020-10-19-13-29-14.png)
+
+4. Next, you can provide the details of the offering. Provide the following data:
+
+   - Name: `Provision New Ubuntu VM`
+   - Choose `Display in Catalog` checkbox
+   - Choose `My company/Virtual Machines` catalog
+   - Choose `Provsion VM` dialog (this is the dialog that you created in a previous exercise)
+   - Choose `Default Zone`
+
+   Optionally, you can provide the monthly cost of the service if you want. This is only informational, to be displayed for the end-user next to the item in the catalog.
+
+   ![](images/2020-10-19-13-34-45.png)
+
+5. Now, move to the `Request Info` tab to provide details about a virtual machine that will be provisioned. Select **ubuntu** as a template, and provide **newvm** as a VM name.
+
+   ![](images/2020-10-19-13-38-05.png)
+
+6. On the **Environment** tab, select **Choose automatically**. On the **Customize** tab, select **Specification** in the Customize dropdown, and provide the `demo.ibmdte.net` as a Domain name. Finally click **Add** to create a new catalog item.
+
+   ![](images/2020-10-19-14-00-18.png)
+
+   Great, you have just added a new item to the self-service catalog. Let's go to the next exercise to test if it is working as designed.
+
+***
+
+## Request a new service
+
+1. In this exercise you will test the offering created in a previous step. Select **Service -> Catalogs -> Service Catalogs**. You should see a previously defined service offering. Click the `Order` button on the right.
+
+   ![](images/2020-10-19-14-41-06.png)
+
+2. The servcie provisioning dialog opens. This is the dialog that you have defined. Provide the `test` as a service name and `testvm` as a vm name. Then, click **Submit**. You are now automatically move to the **Requests** page where you can track the progress. After a while, you should see the notification that the request was auto-approved.
+
+   ![](images/2020-10-19-14-44-41.png)
+
+3. It takes about 5 minutes for a VM to be provisioned. If everything works as expected, you should get the notification that the service was successfully provisioned.
+
+   ![](images/2020-10-19-14-46-13.png)
+
+4. To verify that the VM was actually provisioned, select **Compute -> Infrastructure -> Virtual Machines** from the left-side menu. You should see testvm among other VMs. When you click this VM, the details view opens, showing the virtual machine details.
+
+   ![](images/2020-10-19-14-49-36.png)
+
+   Congratulations! You have successfuly configured the Ingrastructure management module to provision new wirtual machines!
+
+***
+
+# VM provisioning using Terraform
+
+In the following section you will explore the second method of infrastructure provisioning, using the Infrastructure-as-Code approach. Cloud Pak for Multicloud Management includes the Terraform provisioning engine that has this capability.
+
+## Prepare the VMware vSphere for the Terraform exercises
+
+Currently the environment template does not have all the configuration in place required to complete the labs. Before you provision the Virtual Machines you need to fix this. 
+- Open the browser and point it to `10.0.0.100`. Login to the vCenter UI using `administrator@vsphere.local` with password `P@ssw0rd`. 
+- Select the `Default` cluster  under the `Datacenter` and open **Settings** from the right-click (context) menu.
+- Enable the DRS and save the settings
+- Select the `Default` cluster again and pick **New Resource Pool...** from the right-click (context) menu.
+- Name the Resource Pool **dte-demo** and click **Save** - there is no need to change any other value. The screen should look like below:
+
+  ![](images/2020-10-19-10-18-30.png)
+
+- You can close the browser tab and continue with the tutorials.
 
 ## Define a connection to Vmware vSphere environment
 
@@ -160,6 +309,12 @@ In this section, you will define a connection to the Vmware vSphere environment.
    - IPv4 Netmask (CIDR): `24`
 
    When finished click **Create** at the bottom.
+
+   ![](images/2020-10-18-15-56-35.png)
+
+   As you have seen, then number of different parameters required can be overwhelming. Using a shared parameter object, administrator can wrap them in the single object that can be easily reused by end-users, pointing them to the right values (as desired by the administrator).
+
+4. 
 
    *to be continued...*
 
