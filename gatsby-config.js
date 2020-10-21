@@ -19,11 +19,11 @@ module.exports = {
     isSearchEnabled: true,
     repository: {
       baseUrl:
-        'https://github.ibm.com/demohub/cp4mcm20-skytap',
+        'https://ibm-garage-tsa.github.io/cp4mcm-demohub',
       subDirectory: '/',
     },
   },
 }
 ],
-pathPrefix: "/demohub/cp4mcm20-skytap",
+pathPrefix: "/cp4mcm-demohub",
 };

@@ -4,15 +4,14 @@ IBM Cloud Pak for Multicloud Management 2.x on Skytap
 </h1>
 
 <p align="left">
-    <a href="https://github.ibm.com/demohub/cp4mcm20-skytap/blob/master/LICENSE">
+    <a href="https://github.com/ibm-garage-tsa/cp4mcm-demohub/blob/master/LICENSE">
     <img src="https://img.shields.io/badge/license-Apache--2.0-blue.svg" alt="The MCM Bootcamp is released under the Apache-2.0 license" />
-    <a href="https://travis.ibm.com/demohub/cp4mcm20-skytap"><img src="https://travis.ibm.com/demohub/cp4mcm20-skytap.svg?token=bsyfqHy4xhMwWSdQvCND&branch=master" alt="Travis"></a>
   </a>
 </p>
 
 ## Cloud Pak for MCM Bootcamp
 
-The course materials can be viewed at- [https://pages.github.ibm.com/demohub/cp4mcm20-skytap/](https://pages.github.ibm.com/demohub/cp4mcm20-skytap/)
+The course materials can be viewed at- [https://ibm-garage-tsa.github.io/cp4mcm-demohub/](https://ibm-garage-tsa.github.io/cp4mcm-demohub/)
 
 
 ### Contributors
