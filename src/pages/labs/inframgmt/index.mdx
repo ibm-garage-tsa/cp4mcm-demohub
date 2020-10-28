@@ -23,6 +23,7 @@ description:
   <AnchorLink>Request a new service</AnchorLink>
   <AnchorLink>Define a connection to Vmware vSphere environment</AnchorLink>
   <AnchorLink>Define a shared parameter instance</AnchorLink>
+  <AnchorLink>Define new Service Plan</AnchorLink>
   <AnchorLink>Summary</AnchorLink>
 </AnchorLinks>
 
@@ -217,11 +218,19 @@ To expose any offering in a catalog, you have to first define a user interface f
 
    ![](images/2020-10-28-14-57-09.png)
 
-8.  To verify that the VM was actually provisioned, go back to the **CP4MCM:IM** browser tab and select **Compute -> Infrastructure -> Virtual Machines** from the left-side menu. You should see test1vm among other VMs. When you click this VM, the details view opens, showing the virtual machine details.
+8.  To verify that the VM was actually provisioned, go back to the other **CP4MCM:IM** browser tab and select **Compute -> Infrastructure -> Virtual Machines** from the left-side menu. You should see test1vm among other VMs. When you click this VM, the details view opens, showing the virtual machine details.
 
    ![](images/2020-10-19-14-49-36.png)
 
-   Congratulations! You have successfuly configured the Infrastructure management module for new wirtual machines provisioning!
+9. Finally, let's look at the Infrastructure Overview dashbord in the main Cloud Pak user interface. Select the browser tab with the main Cloud Pak UI, then go to menu and select **Observe environments -> Overview**.
+
+   ![](images/2020-10-28-18-03-45.png)
+
+   You can notice, that now the newly provisioned service is visible in *Virtual machine services* section
+
+   ![](images/2020-10-28-18-05-14.png)
+
+   Congratulations! You have successfuly configured the Infrastructure management module for new virtual machine services provisioning!
 
 ***
 
@@ -237,7 +246,7 @@ In this section, you will define a connection to the Vmware vSphere environment 
 
   ![](images/2020-10-16-12-35-12.png)
 
-  This opens a service management UI - where you can define and manage Terraform templates and services. Service comprise of one or more templates connected into a provisioning workflow with pre-defined parameters and service plans.
+  This opens a service management UI - where you can define and manage Terraform templates and services. Service comprises of one or more templates connected into a provisioning workflow with pre-defined parameters and service plans.
 
   ![](images/2020-10-16-12-55-18.png)
 
@@ -307,9 +316,96 @@ In this section, you will define a connection to the Vmware vSphere environment 
 
    As you have seen, then number of different parameters required can be overwhelming. Using a shared parameter object, administrator can wrap them in the single object that can be easily reused by end-users, pointing them to the right values (as desired by the administrator).
 
-4. 
+4. Now, let's test what you have just defined. Open the menu and select **Library -> Services**
 
-   *to be continued...*
+   ![](images/2020-10-28-17-17-35.png)
+
+5. Cloud Pak for MCM includes multiple sample services, that can be easily reused and enhanced. Click **Virtual Machine on VMware** to explore details.
+
+   ![](images/2020-10-28-17-19-58.png)
+
+6. You can notice, that the service is in a *Draft* state (1) and it has just one *Standard* plan available (2). To test the service provisioning click **Next** (3).
+
+   ![](images/2020-10-28-17-23-08.png)
+
+7. Provide the service details as following (for non specified fields leave the default values):
+
+   - Namespace: `default` (this is used for access control & this is where the CRD representing the service will be placed)
+   - Service instance name: `test2`
+   - Conection: `vcenter (Global)`
+   - Virtual Machine IP Address: `10.0.0.40`
+   - Vsphere Managed Inventory Definition: `ubuntu (Global)`
+   - Disk size (GB): `20`
+
+   When finished, click **Deploy** at the bottom.
+
+   ![](images/2020-10-28-17-35-28.png)
+
+8. Order confirmation dialog is displayed. To monitor the deployment process, click **Go to instances**. Then click the service name **test2**
+
+   ![](images/2020-10-28-17-37-24.png)
+
+   ![](images/2020-10-28-17-38-59.png)
+
+9. On the service details page, you can see information about the service, like Service details (1), parameters (2) or you can check the provisioning status. Click the **Log file** link (3)
+
+   ![](images/2020-10-28-17-42-42.png)
+
+10. Here, you can trace the provisioning log and if you provided correct values, after a few minutes you should see that the provisioning was successfully completed and that the service is now active.
+
+    ![](images/2020-10-28-17-45-07.png)
+
+11. Service was successfully tested so let's deprovision the instance to save resources. Go back to the deployed services list and select **Terminate** from the context menu in the **test2** service item.
+
+    ![](images/2020-10-28-18-34-07.png)
+
+    There are 2 seperate items to deprovision the service. *Terminate* means that the resources will be deleted from the target cloud, but the definition will be left in place. *Delete* does the oposite - remove the service definition but leaves the resources running in the target environment.
+
+12. After a while, virtual machine is terminated so you can delete the service instance. Select **Delete** from the context menu.
+
+    ![](images/2020-10-28-18-39-35.png)
+
+    Service is ready to be published, but before you do this, let's define a new detailed service plans.
+
+***
+
+## Define new Service Plan
+
+1. To modify the default service you need to create a new version. Go back to the **Manage service library** view (**menu -> Library -> Services**). In the **Virtual Machine on VMware** row select **Add Version** from the context menu.
+
+   ![](images/2020-10-28-19-25-10.png)
+
+2. Version number must adhere to the four digit syntax. Provide for example `1.1.0.0` and click **Add**.
+
+   ![](images/2020-10-28-19-27-54.png)
+
+3. When the new version is added, you can change multiple properties of the service. Feel free to explore **Composition** or **Parameters** tabs, later click **Plans and form** tab.
+
+   ![](images/2020-10-28-19-30-15.png)
+
+4. To add a new plan click **Add plan** button. Then provide `Development Ubuntu` as Plan name and plan description.
+
+   ![](images/2020-10-28-19-31-02.png)
+
+   ![](images/2020-10-28-19-32-00.png)
+
+5. Change the default values of parameters for the new plan. To edit the value, select the parameter item in `Development Ubuntu` plan and select **Edit** from the context menu
+
+   ![](images/2020-10-28-19-36-16.png)
+
+6. Provide the following default values:
+
+   - Conection: `vcenter (Global)`
+   - Virtual Machine IP Address: `10.0.0.40`
+   - Vsphere Managed Inventory Definition: `ubuntu (Global)`
+   - Disk size (GB): `20`
+   - vm_memory: `512`
+
+   When changing the value of parameter, administrator can make it read only or even hide the value from the user.
+
+   ![](images/2020-10-28-19-39-30.png)
+
+7. When finished, click the **Save** and **Publish** buttons to preserve the changes and make a Service generally available.
 
   Congratulations! You have successfully completed the lab “Infrastructure Management with IBM Cloud Pak for Multicloud Management”.
 
