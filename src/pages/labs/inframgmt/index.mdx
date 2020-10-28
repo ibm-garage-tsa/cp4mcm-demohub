@@ -21,7 +21,6 @@ description:
   <AnchorLink>Define a new dialog</AnchorLink>
   <AnchorLink>Define a Self-service catalog and new Catalog Item</AnchorLink>
   <AnchorLink>Request a new service</AnchorLink>
-  <AnchorLink>Define a Self-service catalog and new Catalog Item</AnchorLink>
   <AnchorLink>Prepare the VMware vSphere for the Terraform exercises</AnchorLink>
   <AnchorLink>Define a connection to Vmware vSphere environment</AnchorLink>
   <AnchorLink>Define a shared parameter instance</AnchorLink>
@@ -111,13 +110,13 @@ For the Terraform provisionig part you will complete the following tasks:
 
    ![](images/2020-10-19-12-33-43.png)
 
-   Here you can explore the details of each individual Virtual Machine, as well as take lifecycle management actions. You can for example provision a new VM, clone or retire any of the existing ones. Since you are in an administrator role you have access to all functions. However normal users won't have that level of access, so let's create for them an offering in a self-service catalog so they will be able to provision a new VM when needed.
+   Here you can explore the details of each individual Virtual Machine, as well as take lifecycle management actions. You can for example provision a new VM, clone or retire any of the existing ones. Since you are in an administrator role you have access to all functions. However, normal users won't have that level of access, so let's create for them an offering in a self-service catalog so they will be able to provision a new VM when needed.
 
 ***
 
 ## Define a new dialog
 
-To expose any offering in a catalog you have to first define a user interface for that offering - in our case it will be a dialog window allowing the end-user to specify the service name and virtual machine name.
+To expose any offering in a catalog, you have to first define a user interface for that offering. In our case, it will be the dialog window allowing end-user to specify a service name and a virtual machine name.
 
 1. In the left-side menu select **Automation -> Automate -> Customization**.
 
@@ -143,7 +142,7 @@ To expose any offering in a catalog you have to first define a user interface fo
 
    ![](images/2020-10-19-13-03-33.png)
 
-   You have just created a very simple dialog, that allows end-user to customize service name and virtual machine name. You have seen the palette is much richer, using this functionality you can create a sophisticated, multi-tab dialogs with validation for more complex offerings.
+   You have just created a very simple dialog, that allows end-user to customize a service name and a virtual machine name. You have seen that the palette of options is much richer. Using this functionality, you can create a sophisticated, multi-tab dialogs with validation for more complex offerings.
 
    ![](images/2020-10-19-13-21-32.png)
 
@@ -177,9 +176,9 @@ To expose any offering in a catalog you have to first define a user interface fo
 
    ![](images/2020-10-19-13-34-45.png)
 
-5. Now, move to the `Request Info` tab to provide details about a virtual machine that will be provisioned. Select **ubuntu** as a template, and provide **newvm** as a VM name.
+5. Now, move to the `Request Info` tab to provide details about a virtual machine that will be provisioned. Select **ubuntu** as a template, and provide **changeme** as a VM name.
 
-   ![](images/2020-10-19-13-38-05.png)
+   ![](images/2020-10-28-14-36-24.png)
 
 6. On the **Environment** tab, select **Choose automatically**. On the **Customize** tab, select **Specification** in the Customize dropdown, and provide the `demo.ibmdte.net` as a Domain name. Finally click **Add** to create a new catalog item.
 
@@ -191,19 +190,35 @@ To expose any offering in a catalog you have to first define a user interface fo
 
 ## Request a new service
 
-1. In this exercise you will test the offering created in a previous step. Select **Service -> Catalogs -> Service Catalogs**. You should see a previously defined service offering. Click the `Order` button on the right.
+1. In this exercise you will test the offering created in a previous step. Open a new browser tab (1), a click **Self-service Catalog** (2) bookmark on the browser toolbar.
 
-   ![](images/2020-10-19-14-41-06.png)
+   ![](images/2020-10-28-14-42-06.png)
 
-2. The servcie provisioning dialog opens. This is the dialog that you have defined. Provide the `test` as a service name and `testvm` as a vm name. Then, click **Submit**. You are now automatically move to the **Requests** page where you can track the progress. After a while, you should see the notification that the request was auto-approved.
+2. You should get automatically logged in into the Self-service portal. Here normal users can request published services. Click the **Service catalog** on the left.
 
-   ![](images/2020-10-19-14-44-41.png)
+   ![](images/2020-10-28-14-45-01.png)
 
-3. It takes about 5 minutes for a VM to be provisioned. If everything works as expected, you should get the notification that the service was successfully provisioned.
+3. The view shows recently added catalog item to provision a new Ubuntu VM. Click the offering tile and provide service name and vm name. Finally, click **Add to Shopping cart** button.
 
-   ![](images/2020-10-19-14-46-13.png)
+   ![](images/2020-10-28-14-48-21.png)
 
-4. To verify that the VM was actually provisioned, select **Compute -> Infrastructure -> Virtual Machines** from the left-side menu. You should see testvm among other VMs. When you click this VM, the details view opens, showing the virtual machine details.
+4. Item is added to a shopping cart. Click the cart icon in the top-right corner to proceed to checkout.
+
+   ![](images/2020-10-28-14-49-59.png)
+
+5. On the dialog windows listing all requested items (in your case it is just a single VM) click **Order**.
+
+   ![](images/2020-10-28-14-51-39.png)
+
+6. The order is auto-approved and the provisioning is started in the background. It takes about 5 minutes to spawn a new VM. In the meanwhile you can explore other options available in the Self-service interface. For examples, users can review status of their orders, view the services they own and take lifecycle actions agains them.
+
+   ![](images/2020-10-28-14-55-23.png)
+
+7. After few minutes, you should see the pop-up that the new VM has been provisioned.
+
+   ![](images/2020-10-28-14-57-09.png)
+
+8.  To verify that the VM was actually provisioned, go back to the **CP4MCM:IM** browser tab and select **Compute -> Infrastructure -> Virtual Machines** from the left-side menu. You should see test1vm among other VMs. When you click this VM, the details view opens, showing the virtual machine details.
 
    ![](images/2020-10-19-14-49-36.png)
 
