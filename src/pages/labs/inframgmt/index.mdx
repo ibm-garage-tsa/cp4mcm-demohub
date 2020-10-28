@@ -21,7 +21,6 @@ description:
   <AnchorLink>Define a new dialog</AnchorLink>
   <AnchorLink>Define a Self-service catalog and new Catalog Item</AnchorLink>
   <AnchorLink>Request a new service</AnchorLink>
-  <AnchorLink>Prepare the VMware vSphere for the Terraform exercises</AnchorLink>
   <AnchorLink>Define a connection to Vmware vSphere environment</AnchorLink>
   <AnchorLink>Define a shared parameter instance</AnchorLink>
   <AnchorLink>Summary</AnchorLink>
@@ -222,7 +221,7 @@ To expose any offering in a catalog, you have to first define a user interface f
 
    ![](images/2020-10-19-14-49-36.png)
 
-   Congratulations! You have successfuly configured the Ingrastructure management module to provision new wirtual machines!
+   Congratulations! You have successfuly configured the Infrastructure management module for new wirtual machines provisioning!
 
 ***
 
@@ -230,38 +229,11 @@ To expose any offering in a catalog, you have to first define a user interface f
 
 In the following section you will explore the second method of infrastructure provisioning, using the Infrastructure-as-Code approach. Cloud Pak for Multicloud Management includes the Terraform provisioning engine that has this capability.
 
-## Prepare the VMware vSphere for the Terraform exercises
-
-Currently the environment template does not have all the configuration in place required to complete the labs. Before you provision the Virtual Machines you need to fix this. 
-- Open the browser and point it to `10.0.0.100`. Login to the vCenter UI using `administrator@vsphere.local` with password `P@ssw0rd`. 
-- Select the `Default` cluster  under the `Datacenter` and open **Settings** from the right-click (context) menu.
-- Enable the DRS and save the settings
-- Select the `Default` cluster again and pick **New Resource Pool...** from the right-click (context) menu.
-- Name the Resource Pool **dte-demo** and click **Save** - there is no need to change any other value. The screen should look like below:
-
-  ![](images/2020-10-19-10-18-30.png)
-
-- You can close the browser tab and continue with the tutorials.
-
 ## Define a connection to Vmware vSphere environment
 
-In this section, you will define a connection to the Vmware vSphere environment. The demo environment contains a single node vSphere cluster managed by the Vmware vCenter which you will leverage in that excercise.
+In this section, you will define a connection to the Vmware vSphere environment to be used by Terraform engine. The demo environment contains a single node vSphere cluster managed by the Vmware vCenter which you will leverage in that excercise.
 
-1. To start the lab, you should be in your Cloud Pak for Multicloud Management Web Console. If you are not, check [here](../gettingstarted/) how to open your console page.
-
-  ![](images/2-cluster-mgmt-img.png)
-
-2. Now, let's explore the Infrastructure Management view. Click the hamburger **Menu** (1) and select **Automate Infrastructure -> Infrastructure Management** (2).
-
-  ![](images/2020-10-16-12-04-59.png)
-
-3. The new browser tab opens, and because there is a Single-Sign-On configured between the Cloud Pak Core and Infrastructure management module, you should get automatically logged in.
-
-  ![](images/2020-10-16-12-01-41.png)
-
-   The dashboard shows summary of the information regarding the connected providers. In this environment, there is only 1 provider used - Vmware vSphere, but you could connect many other target environments - including Openstack, Microsoft SC VMM or public clouds, like AWS, Azure, GKE, etc. This user interface was inherited from the former Red Hat CloudForms and is a commercial, supported version of the open source project ManagedIQ. This modules uses Ansible to discover the VMs in the managed providers and apply configuration and control policies. It also collects the usage data needed for chargeback reports, allowing you to divide costs of shared infrastructure among different consumers - application owners, business units or departaments.
-
-4. To leverage Infrastructure-as-Code for service provisionig Cloud Pak for Multicloud Management uses the Terraform. To open the Terraform management UI (former Cloud Automation Manager) go back to the browser tab with the main Cloud Pak UI, click the hamburger **Menu** (1) and select **Automate Infrastructure -> Manage Services** (2).
+1. To leverage Infrastructure-as-Code for service provisionig Cloud Pak for Multicloud Management uses Terraform. To open the Terraform management UI (former Cloud Automation Manager) go back to the browser tab with the main Cloud Pak UI, click the hamburger **Menu** (1) and select **Automate Infrastructure -> Manage Services** (2).
 
   ![](images/2020-10-16-12-35-12.png)
 
@@ -269,11 +241,11 @@ In this section, you will define a connection to the Vmware vSphere environment.
 
   ![](images/2020-10-16-12-55-18.png)
 
-5. Before you will be able to exercise any of the templates that are pre-loaded in the service library, you have to define a connection to the target environment. In this demo scenario it is Vmware vCenter. Click hamburger menu in the top-left corner (1) and select **Manage -> Cloud connections**
+2. Before you will be able to exercise any of the templates that are pre-loaded in the service library, you have to define a connection to the target environment. In this demo scenario it is Vmware vCenter. Click hamburger menu in the top-left corner (1) and select **Manage -> Cloud connections**
 
    ![](images/2020-10-16-14-30-51.png)
 
-6. Click **Create connection** button to add a new connection.
+3. Click **Create connection** button to add a new connection.
 
    ![](images/2020-10-16-14-40-06.png)
 
