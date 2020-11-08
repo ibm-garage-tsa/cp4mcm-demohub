@@ -44,7 +44,7 @@ In this tutorial, you will explore the following key capabilities:
 
 ## Prerequisite
 
-- You need to provision your own copy of the CP4MCM 2.0 environment, start it and verify for correct startup (check [here](../../gettingstarted/)).
+- You need to provision your own copy of the CP4MCM 2.x environment, start it and verify for correct startup (check [here](../../gettingstarted/)).
 
 ***
 
@@ -79,17 +79,6 @@ You will complete the following tasks:
 ## Add Managed Clusters
 
 In this section, you will add a managed cluster in your Control Panel. If you have done this before as a part of [Cluster Management lab](../clustermgmt/index.mdx) you may skip to the [Next step](#deploy-cloud-native-monitoring-to-the-managed-cluster)
-
-**IMPORTANT:** MicroK8s instance that you will use in this exercises as a managed cluster gets automatically updated on startup. Beginning with version 1.19, the default configuration of MicroK8S prevents running containers in privileged mode, which breaks some of labs. Before you continue, go to the desktop and open the terminal window to MicroK8s cluster clicking the **MicroK8s Terminal** link. Then, in a yellow window, run the following commands:
-
-```sh
-sudo echo "--allow-privileged=true" >> /var/snap/microk8s/current/args/kube-apiserver
-sudo systemctl restart snap.microk8s.daemon-apiserver.service
-```
-
-When prompted for a ibmuser password, enter **engageibm**
-
-***
 
 1. To start the lab, you should be in your Cloud Pak for Multicloud Management Web Console. If you are not, check [here](../gettingstarted/) how to open your console page.
 
@@ -264,11 +253,11 @@ On top of monitoring Linux worker nodes and basic Kubernetes objects Operations 
 
    ```sh
    /home/ibmuser/oclogin.sh
-   oc apply -f bookinfo-multiclister-2020.2.0
-   oc apply -f kubernetes-1.19-ingress-deployable.yaml
+   oc apply -f bookinfo-multiclister-2020.2.1
+   oc apply -f kubernetes-1.18-ingress-deployable.yaml
    ```
 
-   The last command updates the ingress deployable for Kubernetes 1.19 version that is running on the your managed cluster (Ingress definition was changed in 1.19 and extended with new mandatory fields)
+   If you happen to run Kubernetes 1.19 on the your managed cluster (outside the Skytap environment) use kubernetes-1.19-ingress-deployable.yaml. Ingress API was changed in 1.19 and extended with new mandatory fields
 
    The output looks like the following:
 
