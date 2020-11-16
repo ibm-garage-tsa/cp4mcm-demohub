@@ -124,7 +124,7 @@ In this exercise, your task is to configure event management for handling events
 
 ***
 
-## Configure Slack integration
+## Review Slack integration
 
 Operation teams use different notification methods. Some prefer emails, but many uses collaboration tools like PagerDuty, Slack or Microsoft Teams. In this exercise you will configure integration with Slack.
 
@@ -136,23 +136,25 @@ Operation teams use different notification methods. Some prefer emails, but many
 
    ![](images/2020-10-02-15-10-44.png)
 
-3. On the Integrations view, select **Outgoing** tab (1) and then click **New integration** (2)
+3. This view shows the incoming integrations, which define the source of the events coming to the system. There may be some integrations already defined (depending on what labs you have done before), for example, Prometheus service from a managed-cluster or local IBM Cloud Application Performance Management agents (like Kubernetes data collector). To see what other sources are available out-of-thebox, click **New integration**. Review integrations available out-of-the-box, and when done click **Cancel**.
+
+4. On the Integrations view, select **Outgoing** tab (1) and then click **New integration** (2)
 
    ![](images/2020-10-02-15-12-56.png)
 
-4. You can see multiple default integartions provided by Cloud Pak for Multicloud Management. If your company is not using any of the pre-defined ones, you can use the Generic webhook. In this exercise you will configure Slack so select **Slack** tile.
+5. You can see multiple default integartions provided by Cloud Pak for Multicloud Management for sending information to the other systems. If your company is not using any of the pre-defined ones, you can use the Generic webhook. 
 
-   ![](images/2020-10-02-15-15-10.png)
+   ![](images/2020-11-16-17-28-28.png)
 
-5. Provide the integration name (e.g. **slack**) (1) and then the webhook created in the Slack channel (2). For convenience, we have created a slack channel for you so you can reuse the following webhook URL:
-
-   ```sh
+   In this exercise you will use Slack, which was already configured for you - to review configuration, click three dots in the corner of Slack tile and select **Edit**. You can notice that to configure the integration you only need a webhook generated from the Slack platfrom for your target channel. The instructions how to do this are provided on the screen. Change the webhook URL (last 3 elements) for the following value
    
-   ```
+   ```sh
+   TLQMG6B8C/B017XG4BT2T/1q9S4m9fXrcnrUWj1XIlI75u
+   ``` 
+   
+   and click **Save**.
 
-   Finally click **Save** (3) to create the integration.
-
-   ![](images/2020-10-02-15-21-26.png)
+   ![](images/2020-11-16-18-03-41.png)
 
 6. Now, go back to the Incoming integrations tab. You can see that along with the configured integrations, there is an additional tile for generating **Sample events**.
  
@@ -249,6 +251,8 @@ Operation teams use different notification methods. Some prefer emails, but many
 
    ![](images/2020-10-10-12-22-22.png)
 
+   Finally, create a third set of credentials, named `desktop`, with user `ibmuser` and password `engageibm`.
+
 6. Now, let's add new Inventory. In the menu select **Inventories**.
 
    ![](images/2020-10-10-11-29-08.png)
@@ -277,13 +281,46 @@ Operation teams use different notification methods. Some prefer emails, but many
 
    ![](images/2020-10-10-16-06-51.png)
 
-9. Now, add the static inventory for other hosts. Add new inventory but this time provide the name `static` and instead of sources tab, select `hosts`.
+9. Now, add the static inventory for other hosts. Add new inventory but this time provide the name `static`, click **Save** button and then instead of sources tab, select `hosts`. Then click green '+' sign on the right to add a new entry. Provide `10.0.0.10` as **Host name** and click **Save**.
 
+   ![](images/2020-10-21-12-13-43.png)
 
+   This host is the desktop, in the next excerices you will run Asnible jobs on that host as a part of automation. However, before you can do this, there is one more step required: you need to add playbooks to your Ansible Tower.
 
-
-   
 ***
+
+## Configure Ansible playbooks
+
+   Ansible is a very popular open-source automation tool, with a large number of available automation scripts called playbooks. Ansible basics are outside scope of this tutorials so you will just use the pre-defined sample playbook. To learn more about Ansible visit [Ansible website](https://www.ansible.com)
+
+   Sample playbook that you will use as the automation action triggered in response to the event is meant to create a sample file at the target host. It emulates the real action which normally one would take - for example to restart failing application.
+
+ 1. In order to add a new playbook with automation scripts you have to first create a project. From the left-side menu select **Projects** (1) and click '+' sign to add a new project (2).
+
+   ![](images/2020-11-16-15-25-51.png)   
+
+2. Provide the name of the project (e.g. **runbook-automation**), select **Git** as SCM Type and enter **https://github.com/dymaczew/rba-ansible-sample** as SCM URL. When done click **Save**. This action starts in the background process of retriving content of the repository. If the syncronization is successful, you should see a green dot next to the project name as pointed by the arrow on the screenshot below
+
+   ![](images/2020-11-16-15-31-57.png)
+
+3. Now, you need to create the job template within a project. Select the **Job templates** (1) tab and click '+' sign (2) to add new **Job template**.
+
+   ![](images/2020-11-16-15-36-04.png)
+
+4. Provide the following details on a Job template creation form:
+
+   - Name: **Start_Online_Banking**
+   - Inventory: **static**
+   - Credentials: **desktop**
+   - Verbosity: **0 (Normal)**
+   - Project: **runbook-automation**
+   - Playbook: **start-online-banking.yaml**
+
+   ![](images/2020-11-16-15-46-16.png)
+
+   As you can see, there is a lot more different options available to customize the job execution, but you will not explore them in this tutorial. When ready with the inputs, click **Save**.
+
+   This completes the Ansible preparation part. You have defined the automation task, created inventory file and provided credentials. Now, let's define the trigger which executes this action when the specific event occurs.
 
 ## Configure Runbook automation
 
@@ -309,15 +346,80 @@ Operation teams use different notification methods. Some prefer emails, but many
 
    ![](images/2020-10-09-17-32-59.png)
 
-6. Now select the **Automations** tab and click **New automation**.
+6. Now, select the **Automations** tab and click **New automation**.
 
-   Automations are predefined tasks that can be invoked by the operator manually during the incident or executed automatically in response to the incoming events. 
+   Automations are predefined tasks that can be invoked by the operator manually during the incident or executed automatically in response to the incoming events. Select **Ansible Tower** as type, provide name and select **Start_Online_Banking** template as shown below. Finally click **Save**
 
+   ![](images/2020-11-16-16-07-38.png)
 
+7. Next, you need to add a runbook. Select **Library** tab and click **Add runbook** button.
 
+   ![](images/2020-11-16-16-10-49.png)
+
+8. Provide the name and secription. Below, there is an editor allowing you to define a runbook content. You can define multiple steps, provide commands to be run along with the guidence for the operator who will use this later. You can also call automations and this is exactly what we want. Click the **Automation** icon to add previously defined automation to the runbook.
+
+   ![](images/2020-11-16-16-16-19.png)
+
+9. Click '+' sign next to **Start_Online_Banking** automation on the list to add automation to the runbook. On the dialog that pops up click **Apply** to confirm.
+
+   ![](images/2020-11-16-16-18-55.png)
+
+   ![](images/2020-11-16-16-20-15.png)
+
+   Finally, click **Publish** to complete defining the runbook.
+
+10. Finally, you need to connect the runbook with the events. This is done with the Event Policy. Go back to the **Administration** tab and select **Policies**. Previously you have used this to define incident policy that sends out Slack notifications. This time you add a new event policy. Click **New event policy**.
+
+    ![](images/2020-11-16-16-25-02.png)
+
+11. Provide the name and description.
+
+    ![](images/2020-11-16-16-29-17.png)
+
+12. In the events section select **Specify conditions** and for **Condition 1**, change the attribute to **Summary**, select **"contains"** for the operator, and enter **"node process not running"** as the value.
+
+    ![](images/2020-11-16-16-31-01.png)
+
+    You can test the condition to verify that you haven't made any mistake.
+
+13. Scroll down to **Action** section. Select **Assign runbook**, and then click **Add runbook assignment**.
+
+    ![](images/2020-11-16-16-32-45.png)
+
+14. Select the available runbook and click **Apply**. Then, select **Automatically run this runbook** checkbox and click **Save**.
+
+    ![](images/2020-11-16-16-35-49.png)
+
+15. If you haven't enabled the policy yet (it was possible during definition step), toggle the **Enabled** switch.
+
+    ![](images/2020-11-16-16-38-10.png)
+
+    This concludes the definitions. Now, let's check how it works in action.
 ***
 
 ## Test runbook automation
+
+1. Go back to the **Administration** tab and select **Integrations**. Generate again sample events. Now, go back to **Administraton** and select **Incidents** tab. Select **All incidents**
+
+   ![](images/2020-11-16-17-07-45.png)
+
+   You can notice, that the incident related to the Online Banking application was automatically assigned to the Online Banking Support group. Click **Investigate**
+
+2. In the Resolution view, you should see that the Slack notification was send out (1), as well as that the runbook was assigned and successfully executed by the event policy.
+
+   ![](images/2020-11-16-17-10-57.png)
+
+3. To confirm, open the Management Hub terminal on the desktop and look for **rba-result.txt** file.
+
+   ![](images/2020-11-16-17-12-30.png)
+
+4. In case something went wrong and you would like to look at the details of the Ansible execution log, you can go the the Ansible Tower, or withing the Cloud Pak user interface, go to the **Administration** tab, **Runbooks** tile and look at the Executiuon tab. Here you can find the detailed log of each execution of any of the automations you defined.
+
+![](images/2020-11-16-17-15-35.png)
+
+![](images/2020-11-16-17-15-44.png)
+
+Congratulations ! You have reached the end of the tutorial.
 
 ***
 
