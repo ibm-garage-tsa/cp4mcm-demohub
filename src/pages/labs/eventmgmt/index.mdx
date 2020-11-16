@@ -36,9 +36,13 @@ Event Management installed along with Monitoring module of the Cloud Pak gives y
 In this lab, you are the leader of the Operations team, responsible for problem resolution. You define how your team is notified in the event of a failure and define a "runbook" guide of possible remediation steps.
 
 In this tutorial, you will explore the following key capabilities:
-- `Create a policy that automatically assigns incidents to alert over Slack`
-- `Generate sample events to verify that your new policy works as expected`
-- `Use the runbook suggested to the incident to resolve it`
+
+- `Define a new support group and assign specific incidents to this group`
+- `Create incident policy that automatically send notifications to Slack channel`
+- `Configure Ansible Tower and define new Runbook automation`
+- `Create event policy that automatically runs Ansible playbook in response to the event`
+- `Generate sample events to verify that your new policies work as expected`
+
 
 ***
 
@@ -56,7 +60,7 @@ In this tutorial, you will log in to the Hub cluster to configure and use event 
 
 You will complete the following tasks:
 
--	Create Online Banking support group
+- Create Online Banking support group
 - Configure Slack integration
 - Define Event Policy
 - Define Incident Policy
@@ -239,7 +243,7 @@ Operation teams use different notification methods. Some prefer emails, but many
 
    ![new credentials](images/2020-10-10-11-44-54.png)
 
-   You will add 2 different type of credentials. First let's add a credentials to the vcenter that allows Asnible Tower to collect data from the Vmware vSphere environment. Later, you will add credentials to specific virtual machines, to allow running Ansible playbooks on these VMs using ssh.
+   You will add 2 different type of credentials. First let's add a credentials to the vcenter that allows Ansible Tower to collect data from the Vmware vSphere environment. Later, you will add credentials to specific virtual machines, to allow running Ansible playbooks on these VMs using ssh.
 
 4. Provide a name (e.g. `vcenter`) (1), select the Organization `Default` (2), then select the **Credential type** lookup (3) to pick the **Vmware vCenter** option (5) available on the last tab of the list (4). Then click **Select**.
 
@@ -285,7 +289,7 @@ Operation teams use different notification methods. Some prefer emails, but many
 
    ![](images/2020-10-21-12-13-43.png)
 
-   This host is the desktop, in the next excerices you will run Asnible jobs on that host as a part of automation. However, before you can do this, there is one more step required: you need to add playbooks to your Ansible Tower.
+   This host is the desktop, in the next excerices you will run Ansible jobs on that host as a part of automation. However, before you can do this, there is one more step required: you need to add playbooks to your Ansible Tower.
 
 ***
 
@@ -415,21 +419,24 @@ Operation teams use different notification methods. Some prefer emails, but many
 
 4. In case something went wrong and you would like to look at the details of the Ansible execution log, you can go the the Ansible Tower, or withing the Cloud Pak user interface, go to the **Administration** tab, **Runbooks** tile and look at the Executiuon tab. Here you can find the detailed log of each execution of any of the automations you defined.
 
-![](images/2020-11-16-17-15-35.png)
+   ![](images/2020-11-16-17-15-35.png)
 
-![](images/2020-11-16-17-15-44.png)
+   ![](images/2020-11-16-17-15-44.png)
 
-Congratulations ! You have reached the end of the tutorial.
+   Congratulations ! You have reached the end of the tutorial.
 
 ***
 
 ## Summary
 
 You completed the Cloud Pak for Multicloud Management tutorial: Multi-cluster Management. Throughout the tutorial, you explored the key takeaways:
-- `Understand Cloud Pak for Multicloud Management`;
-- `Add a managed cluster`;
-- `Deploy an application`;
--	`Manage and monitor application resources of local and remote clusters`;
+
+- `Define a new support group and assign specific incidents to this group`
+- `Create incident policy that automatically send notifications to Slack channel`
+- `Configure Ansible Tower and define new Runbook automation`
+- `Create event policy that automatically runs Ansible playbook in response to the event`
+- `Generate sample events to verify that your new policies work as expected`
+
 
 If you would like to learn more about Cloud Pak for Multicloud Management, please refer to:
 -	<a href="https://www.ibm.com/cloud/cloud-pak-for-management" target="blank">Cloud Pak for Multicloud Management home page</a>
