@@ -44,9 +44,7 @@ In this tutorial, you will explore the following key capabilities:
 
 ## Prerequisite
 
-- You need to have your personal CP4MCM on ROKS environment (check [here](../../environment/overview/) how to request it).
-- You need to pre-install all necessaries CLI tools (check [here](../installcli/) how to install them).
-- If you didn't complete the Lab 1 - Multicluster Management, you need, at least, to complete the steps of [Add Manged Clusters](https://pages.github.ibm.com/demohub/cloudpak-mcm/labs/clustermgmt/#add-managed-clusters) to have your clusters ready on CP4MCM to be able to follow this lab.
+- You need to provision your own copy of the CP4MCM 2.0 environment, start it and verify for correct startup (check [here](../../gettingstarted/)).
 
 ***
 
@@ -86,6 +84,146 @@ You will complete the following tasks:
 
 ***
 
+## Add Managed Clusters
+
+In this section, you will add two new managed clusters in your Control Panel. As explained before, you will add your OpenShift Hub cluster and your Microk8s managed cluster.
+
+1. To start the lab, you should be in your Cloud Pak for Multicloud Management Web Console. If you are not, check [here](../gettingstarted/) how to open your console page.
+
+  ![](images/2-cluster-mgmt-img.png)
+
+2. Now, let's explore the Cluster view. Click the hamburger **Menu** (1) and select **Automate Infrastructure -> Clusters** (2).
+
+  ![](images/new-image-1.png)
+
+3. Initially, you shouldn't have any cluster registered here. Let's add our first cluster. Click **Add cluster**.
+
+  ![](images/2020-09-17-19-59-07.png)
+
+4. You can add a cluster by Importing an existing cluster or provisioning a new cluster using a Service Library. We use the first option. Select **Import an Existing cluster** (1) and click **Import** (2).
+
+  ![](images/2020-09-17-20-00-49.png)
+
+5. Enter **ocp311** for cluster name (1) and **ocp311** for namespace (2). You can view the yaml file and change the settings as needed (3). To import an OpenShift cluster no further changes are needed. Click **Generate command** to continue (4).
+
+  ![](images/new-image-3.png)
+
+6. A curl command is generated that you will use to add the new cluster. Click **Copy command** button (1) and click **View cluster** (2) to see the new hub-cluster details page.
+
+  ![](images/7-cluster-mgmt-img.png)
+
+7. Open the terminal window clicking the **OCP 3.11 Terminal** link on the desktop. The **OCP 311** windows has a blue background.
+
+  ![](images/new-image-4.png)
+
+8. Let's test the new context configuration. Run the command below to get the cluster nodes.
+
+  ```
+  oc get nodes
+  ```
+
+  ![](images/new-image-5.png)
+
+  Great, you are accessing the OCP 3.11 cluster. Now you are ready to execute the generated command.
+
+9. **Paste** the generated command that you previously copied in the clipboard.  When you run the command, several Kubernetes objects are created in the multicluster-endpoint namespace.
+
+  ![](images/new-image-6.png)
+
+  In case you will see the error like shown below, run the command again.
+
+  ![](images/new-image-7.png)
+
+  This error is a result of performance limitations of the Skytap environment - the final result should look like below:
+
+  ![](images/new-image-8.png)
+
+10. You can view the progress by entering the command:
+
+  ```
+  watch oc get pods -n multicluster-endpoint
+  ```
+
+  Make sure all the pods are in the running state.
+
+  ![](images/new-image-9.png)
+
+11. The cluster endpoint (klusterlet) is ready when all the Pods are in Running state (press CTRL+C to cancel the watch command). Back to the browser window, click **View cluster** and make sure that the cluster status is **Ready** now (if necessary, refresh the details page). On the page navigation breadcrumb, click on **Clusters** link.
+
+  ![](images/new-image-10.png)
+
+12. Now you can see your ocp311 cluster on the clusters list. You can add labels to identify your new cluster. On the hub-cluster row, click on the three dots icon (1) and select **Edit labels** (2).
+
+  ![](images/new-image-11.png)
+
+13. Add a new label, **environment** (1), and give a value **Dev** (2). Click **+** (3) and **save** (4) the changes.
+
+  ![](images/new-image-12.png)
+
+  Great, your first cluster is ready! Now let's add your MicroK8s managed cluster.
+
+14. Click **Add cluster** again.
+
+  ![](images/new-image-13.png)
+
+15. Select again **Import an Existing cluster** (1) and click **Import** (2).
+
+  ![](images/2020-09-17-20-00-49.png)
+
+16. Enter **microk8s** for cluster name (1) and **microk8s** for namespace (2). Click **Generate command** to continue (3).
+
+  ![](images/2020-09-17-20-26-25.png)
+
+17. A curl command is generated that you will use to add the new cluster. Click **Copy command** button (1).
+
+  ![](images/7-cluster-mgmt-img.png)
+
+18. Go back to the desktop and open the terminal window to MicroK8s cluster clicking the **MicroK8s Terminal** link.
+
+![](images/2020-09-17-20-30-28.png)
+
+19. MicroK8s terminal has a yellow background. To verify the cluster status run the following command in the **MicroK8s** window
+
+  ```
+  kubectl get nodes
+  ```
+
+  ![](images/2020-09-17-20-32-22.png)
+
+  Great, you are accessing the managed cluster. Now you are ready to execute the generated command.
+
+20. **Paste** the generated command that you previously copied in the clipboard. When you run the command, several Kubernetes objects are created in the multicluster-endpoint namespace.
+
+  ![](images/2020-09-17-20-33-29.png)
+
+  If you see the error as before - just run the command again.
+
+21. You can view the progress by entering the command:
+
+  ```
+  watch kubectl get pods -n multicluster-endpoint
+  ```
+
+  Make sure all the pods are in the running state (press CTRL+C to terminate the watch command).
+
+  ![](images/2020-09-17-20-35-48.png)
+
+22. Back to the browser window, click **View cluster** and make sure that the cluster status is **Ready** now (if necessary, refresh the details page).
+
+  ![](images/2020-09-17-20-37-12.png)
+
+  ![](images/2020-09-17-20-38-01.png)
+
+23. On the page navigation breadcrumb, click on **Clusters** link
+
+  ![](images/new-image-14.png)
+
+24. Now you can see your both clusters in a clusters list. You should add labels to identify your new cluster. Follow the same procedure as in steps 12-13 above to add a label **environment** = **QA** to the microK8s cluster
+
+  Great, your both clusters are ready and managed by IBM Cloud Pak for Multicloud Management. Using this Pak, you are able to manage both cluster from a single pane of glass. Let's check it in the next section.
+
+***
+
 ## Define Application Channel
 
 IBM Cloud Pak for Multicloud Management provides enhanced application management capabilities through an improved application model and new deployment options. The new model and deployment options are designed to unify and simplify the deployment experience for creating and managing your applications across clusters.
@@ -102,19 +240,31 @@ Channels (Channel.app.ibm.com) define a namespace within the hub cluster and poi
 
 In this section, you define Application and Channel resources to deploy the Modresort application. The resources will be created using YAML files. The modresort application is a simple application with only one component.
 
-1.Back to the terminal window, let's create our YAML files to define Channel, Application, Subscription, etc. To simplify the lab steps, you will clone a pre-created YAML. Don't worry, because we will understand them. To copy pre-created YAML files, let's use the Git CLI (if you don't have Git CLI, check [here](https://pages.github.ibm.com/demohub/cloudpak-mcm/labs/installcli/) how to install it). Run the command below:
+1.Back to the Desktop, open the Management Hub terminal window (green terminal).
+
+  ![](images/new-image-15.png)
+
+  To set the the context to use your Hub cluster (login to the cluster), run the command below:
 
 ```
-git clone https://github.ibm.com/demohub/appmgmtlab.git
+./oclogin.sh
+```
+
+  ![](images/2020-09-17-20-02-48.png)
+
+2.Let's create our YAML files to define Channel, Application, Subscription, etc. To simplify the lab steps, you will clone a pre-created YAML. Don't worry, because we will understand them. To copy pre-created YAML files, let's use the Git CLI (if you don't have Git CLI, check [here](https://pages.github.ibm.com/demohub/cloudpak-mcm/labs/installcli/) how to install it). Run the command below:
+
+```
+git clone https://github.com/rafosorio/appmgmtlab.git
 ```
 
 ```
 cd appmgmtlab
 ```
 
-  ![](images/4-app-mgmt-img.png)
+  ![](images/new-image-16.png)
 
-2.Now you have two folders (modresortchan and modresortapp). Let's start exploring the **modresortchan** and use any editor to see the content of the **channel.yaml** file.
+3.Now you have two folders (modresortchan and modresortapp). Let's start exploring the **modresortchan** and use any editor to see the content of the **channel.yaml** file.
 
 ```
 cd modresortchan
@@ -123,7 +273,7 @@ cd modresortchan
 vi channel.yaml
 ```
 
-3.Our channel.yaml has the content below.
+4.Our channel.yaml has the content below.
 
 ```
 apiVersion: app.ibm.com/v1alpha1
@@ -140,7 +290,7 @@ spec:
 
   It is a really simple file. The spec collection defines the type of the channel. In this lab, the channel is of type namespace, meaning that the yaml you create will be deployed and stored in OpenShift namespaces rather than in a Helm chart or Object store. This file is ready, and you don't need to edit it, go ahead and **close** the channel.yaml file.
 
-4.The modresort application component consists of a **deployment resource definition** and a **service resource definition**.
+5.The modresort application component consists of a **deployment resource definition** and a **service resource definition**.
 
   To enable these components to be used by the channel subscription, each of the resources need to be wrapped by a new custom resource definition (CRD) called Deployable.
 
@@ -248,7 +398,7 @@ spec:
         app: devchan-modresortchan-route
       name: modresorts
     spec:
-      host: modresorts-default.<your_ingress_subdomain>
+      host: modresorts-default.10.0.0.15.nip.io
       port:
         targetPort: 9080
       subdomain: ""
@@ -264,19 +414,7 @@ spec:
   - One for the modresort service, refers to the service port and defines a NodePort;
   - One for the modresort routes, refers to domain name and exposes to the external network;
 
-Refer to the [online documentation](https://www.ibm.com/support/knowledgecenter/en/SSFC4F_1.2.0/mcm/applications/managing_deployables.html) for details on the construct of the Deployable definition.
-
-As you can see, at the end of the file, there is a host attribute. Here you should replace the *<your_ingress_subdomain>*.
-
-5.To get your Ingress Subdomain, you can access IBM Cloud and check this info in your Multicloud Management Openshift cluster view, or an easier option is: you received an email when you requested your environment (just check to open the email for Multicloud Management Pak environment). In this email there is a Cluster URL link.
-
-  In this Cluster detail page, you should see the Ingress Domain.
-
-  ![](images/5-app-mgmt-img.png)
-
-6.Back to the Terminal window, replace *<your_ingress_subdomain>*. **Save** and **close** the **deployable.yaml**.
-
-  ![](images/6-app-mgmt-img.png)
+  Refer to the [online documentation](https://www.ibm.com/support/knowledgecenter/en/SSFC4F_1.2.0/mcm/applications/managing_deployables.html) for details on the construct of the Deployable definition.
 
   Next section, you learn how to create a subscription.
 
@@ -297,7 +435,7 @@ The subscription to a channel package contains
 
 The subscription controller can monitor the channel for new or updated deployables, such as an updated Helm release or a new Kubernetes deployable object. Then, the controller can download the Kubernetes deployable object or Helm release directly from the source location (Helm repository, object store, or namespace) to the target managed clusters.
 
-1.Back to the terminal window, let's explore the YAML files on modresortapp folder.
+1.Back to the Management Hub terminal window, let's explore the YAML files on modresortapp folder.
 
 ```
 cd ../modresortapp
@@ -397,25 +535,7 @@ spec:
 
 In this section, you will deploy the application components to their respective Kubernetes namespaces, using the yaml files that you created in the previous task.
 
-1.Back to the terminal window, set the context to use your Hub Cluster.
-
-```
-kubectl config use-context roks-hub-cluster
-```
-
-2.You should be already logged in your Hub Cluster. Run the command bellow to confirm it:
-
-```
-cloudctl api
-```
-
-  `Only if you are not logged in`, you can run the command below to log in to Hub Cluster:
-
-```
-cloudctl login -a <CP4MCM_console_hostname> -n default
-```
-
-3.Execute the command bellow to create two new Openshift projects.
+1.Back to the Management Hub terminal window, execute the command bellow to create two new Openshift projects.
 
 ```
 oc new-project modresort-project
@@ -425,9 +545,9 @@ oc new-project modresort-project
 oc new-project modresort-entitlement
 ```
 
-  ![](images/7-app-mgmt-img.png)
+  ![](images/new-image-17.png)
 
-4.Now, let’s deploy the modresortchan. Execute the commands below:
+2.Now, let’s deploy the modresortchan. Execute the commands below:
 
 ```
 cd ..
@@ -439,9 +559,9 @@ oc apply -f modresortchan
 
   The output of the above command will be similar to the illustration below. The output shows that Channel and Deployables are deployed.
 
-  ![](images/8-app-mgmt-img.png)
+  ![](images/new-image-18.png)
 
-5.The subscription is deployed to a different namespace than the channel. Never deploy the subscription to the same namespace as the channel. Hence, deploy the subscription to the other namespace, modresort-project.
+3.The subscription is deployed to a different namespace than the channel. Never deploy the subscription to the same namespace as the channel. Hence, deploy the subscription to the other namespace, modresort-project.
 
 ```
 oc project modresort-project
@@ -451,7 +571,7 @@ oc project modresort-project
 oc apply -f modresortapp
 ```
 
-  ![](images/9-app-mgmt-img.png)
+  ![](images/new-image-19.png)
 
   Next section of the lab will walk you through validating the application deployment.
 
@@ -461,21 +581,21 @@ oc apply -f modresortapp
 
 The Application view in Cloud Pak for Multicloud Management console provides graphical view into the applications, channels and subscriptions deployed in the clusters. Let’s validate if the modresort application is deployed correctly.
 
-1.Back to the Firefox browser, you should be in your Cloud Pak for Multicloud Management Web Console. If you are not, check [here](../beforestart/) how to open your console page.
+1.Back to the Firefox browser, you should be in your Cloud Pak for Multicloud Management Web Console.
 
   ![](images/10-app-mgmt-img.png)
 
-2.On the top left of the page, open the **Menu** (1) and select **Manage Applications** (2).
+2.On the top left of the page, open the **Menu** (1) and select **Manage Applications** (2) and click on **Hybrid applications** (3).
 
-  ![](images/11-app-mgmt-img.png)
+  ![](images/new-image-20.png)
 
 3.Click on the **modresort101-modresortapp** application link to get to the application Overview page.
 
-  ![](images/12-app-mgmt-img.png)
+  ![](images/new-image-21.png)
 
 4.Scroll down to view the application diagram.
 
-  ![](images/13-app-mgmt-img.png)
+  ![](images/new-image-22.png)
 
   *Note: It may take a couple of minutes for the application to deploy to the cluster.*
 
@@ -489,9 +609,9 @@ The Application view in Cloud Pak for Multicloud Management console provides gra
 oc get subscription.app.ibm.com --all-namespaces
 ```
 
-  The subscription from the **mcm hub** should be in the **Propagated** state.
+  The subscription from the **modresort** should be in the **Propagated** state.
 
-5.Back to the terminal window, let’s check the pods are in running state.
+5.Back to OCP311 terminal window (blue window), let’s check the pods are in running state.
 
 ```
 oc get pods -n default
@@ -499,7 +619,7 @@ oc get pods -n default
 
   You should see the devchan-modresort-deployment pod running in the default namespace
 
-  ![](images/15-app-mgmt-img.png)
+  ![](images/new-image-23.png)
 
 6.Use the command line to get the devchan-modresortchan-service NodePort.
 
@@ -507,15 +627,16 @@ oc get pods -n default
 oc get services -n default
 ```
 
-  ![](images/16-app-mgmt-img.png)
+  ![](images/new-image-24.png)
 
   Take note of the devchan-modresortchan-service nodePort (on the picture above is 30606), you will use it to access your application.
 
 7.Back to the browser, open a new tab and navigate to:
 
 ```
-http://<your_ingress_subdomain>:<NodePort>/resorts
+http://ocp311:<NodePort>/resorts
 ```
+  For example, http://ocp311:32664/resorts
 
   ![](images/17-app-mgmt-img.png)
 
