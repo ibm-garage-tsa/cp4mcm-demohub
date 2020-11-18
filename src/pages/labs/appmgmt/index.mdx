@@ -22,7 +22,6 @@ description:
   <AnchorLink>Deploy the Application</AnchorLink>
   <AnchorLink>Validate the Application</AnchorLink>
   <AnchorLink>Move the Application</AnchorLink>
-  <AnchorLink>Visualize Application Health</AnchorLink>
   <AnchorLink>Summary</AnchorLink>
 </AnchorLinks>
 
@@ -638,9 +637,9 @@ http://ocp311:<NodePort>/resorts
 ```
   For example, http://ocp311:32664/resorts
 
-  ![](images/17-app-mgmt-img.png)
+  ![](images/new-image-25.png)
 
-  Congratulations! You have successfully deployed the modresorts application to the local OpenShift Cluster.
+  Congratulations! You have successfully deployed the modresorts application to the OpenShift 3.11 Cluster.
 
 ***
 
@@ -660,67 +659,47 @@ In the following steps, you will move the application from the Dev cluster to th
 
 2.On the Editor, modify the environment setting from Dev to QA.
 
-  ![](images/19-app-mgmt-img.png)
+  ![](images/new-image-26.png)
 
 3.Apply changes by clicking on **update** icon as shown below.
 
   ![](images/20-app-mgmt-img.png)
 
-4.Within a few minutes, the cluster value changes from hub-cluster to managed-roks, and the application is now running on managed cluster instead of hub cluster.
+4.Within a few minutes, the cluster value changes from ocp311 to microk8s, and the application is now running on microk8s cluster.
 
-  ![](images/21-app-mgmt-img.png)
+  ![](images/new-image-27.png)
 
-5.To validate that the application moved from the hub-cluster to the managed-roks, back to the Terminal window and change your kubectl context to use your managed-roks cluster:
-
-```
-kubectl config use-context roks-managed-cluster
-```
-
-6.Check that **devchan-modresortchan-deployment** pod is **running**, executing the command below:
+5.Let’s verify that the application is actually running on MicroK8s cluster. Go back to the yellow MicroK8s terminal windows and execute the following commands:
 
 ```
-oc get pods -n default
+kubectl get pods -n default
+kubectl get service -n default
 ```
 
-  ![](images/22-app-mgmt-img.png)
+  ![](images/new-image-28.png)
 
-7.Execute the command below to get the service port.
+6.Notice the **Node port** used by the service. In the example screenshot it is `30726`.
 
-```
-oc get svc
-```
+  ![](images/new-image-29.png)
 
-  Make a note of the nodePort value to access the UI (in the picture below the NodePort is 30970).
+7.Go back to your browser window, open a new tab and provide the following URL:
+  `http://microk8s:[port-number-from-previous-step]/resorts`
 
-  ![](images/23-app-mgmt-img.png)
-
-8.Now, you need to see the ingress subdomain of your Managed Node (ROKS of Cloud Pak for Apps). Let's do the same step that you did to get the ingress subdomain of Cloud Pak for Management ROKS. Open the e-mail that you received when you requested the Cloud Pak for Apps environment, and open the Cluster URL Link.
-
-  In this Cluster detail page, you should see the Ingress Domain (confirm on the top, that you are on the Cloud Pak for Apps cluster).
-
-  ![](images/1-app-ingress.png)
-
-9.Open another browser tab and access the application running on managed-roks cluster using the following link:
-
-```
-http://<your_managed-roks_ingress_subdomain>:<NodePort>/resorts
-```
-
-  ![](images/24-app-mgmt-img.png)
+  ![](images/new-image-30.png)
 
   Great, you moved the application from one cluster to the other.
 
-10.What if you want to run the application on both the clusters? This is possible by changing clusterReplicas and matchingLabel. Let’s do it!
+8.What if you want to run the application on both the clusters? This is possible by changing clusterReplicas and matchingLabel. Let’s do it!
 
   Back to the Multicluster Management page, on the Editor, change **clusterReplicas** to **2**.
 
-  ![](images/25-app-mgmt-img.png)
+  ![](images/new-image-31.png)
 
-11.On the spec **matchLabels** setting, **remove** the **environment label**, and add **vendor** label with value **Openshift**.
+9.On the spec **matchLabels** setting, **remove** the **environment label**, and add **cloud** label with value **Other**.
 
-  ![](images/26-app-mgmt-img.png)
+  ![](images/new-image-32.png)
 
-  The label, vendor, exists on both the clusters and the value matches OpenShift.
+  The label, cloud, exists on both the clusters and the value matches Other.
 
 12.Apply the changes by clicking update icon.
 
@@ -728,31 +707,9 @@ http://<your_managed-roks_ingress_subdomain>:<NodePort>/resorts
 
 13.Within a few minutes, the resource overview refreshes, indicating that the application is running on both clusters. You can validate by checking the status of pods on both the clusters
 
-  ![](images/28-app-mgmt-img.png)
+  ![](images/new-image-33.png)
 
   Great, now you have your application on both clusters. Next section, you explore Grafana dashboard to visualize the application health across clusters.
-
-***
-
-## Visualize Application Health
-
-Cloud Pak for Multicloud Management provides Grafana dashboard via Federated Prometheus to visualize the application health across clusters.
-
-1.Click Grafana on the upper-right corner to display the dashboard.
-
-  ![](images/29-app-mgmt-img.png)
-
-2.From the Federated Prometheus Dashboard, you can see details on your application health and usage such as memory, CPU, network, etc. The data is refreshed every 10 seconds.
-
-  ![](images/30-app-mgmt-img.png)
-
-3.Click on the Alert button.
-
-  ![](images/31-app-mgmt-img.png)
-
-4.On the Alert page, you are able to create Alert based on Alert Rules and define Notification channels.
-
-  ![](images/32-app-mgmt-img.png)
 
   Congratulations! You have successfully completed the lab “Application Management with IBM Cloud Pak for Multicloud Management”.
 
