@@ -1,42 +1,28 @@
 ---
-title: Before You Start
+title: Requesting your ROKS Environment
 description: IBM Cloud Pak for MCM
 ---
 
-You should have your CP4MCM environment on ROKS requested and installed. If not, please complete the [Request Your Environment](../../environment/overview) steps before start the labs. The following labs are specific for ROKS environment, in [IBM Demos site](https://www.ibm.com/demos/collection/Cloud-Pak-for-Multicloud-Management), you will find a similar version using Skytap (available to use with Customers and Business Partners).
+Follow the steps below to request your CP4MCM ROKS environment.
 
-## Accessing your CP4MCM console
+## Requesting a ROKS Cluster
 
-If you have just requested your environment and installed your CP4MCM on ROKS, you should be on your CP4MCM Console Page, so you can skip this section.
+1.Access the [DTE 2.0 site](https://dte2.us1a.cirrus.ibm.com/) and log in using your IBM credentials.
 
-If not, follow the steps below to access the CP4MCM Console.
+2.On the home page, scroll down and open the **Cloud Pak for Multicloud Management Activation Kit**.
 
-1.Log in to [IBM Cloud](http://cloud.ibm.com) using your IBM credentials.
+  ![](images/cp4mcm-ak.png)
 
-2.First, confirm that you are on Digital Technical Engagement Account, if not click to change it.
+3.Open the **Environments** tab.
 
-  ![](images/ibmcloud-account.png)
+  ![](images/environments.png)
 
-3.On IBM Cloud Dashboard, click **Clusters** to see your OpenShift Hub Cluster.
+4.Select the ROKS cluster that you want (the simplest way is to select the latest version of the Express instalation).
 
-  ![](images/ibmcloud-dashboard-cluster.png)
+  ![](images/express.png)
 
-4.Click the OpenShift Hub cluster to open the cluster view.
+5.Follow the **Create a reservation** form to define the details of your ROKS Reservation.
 
-  ![](images/ocp-hubcluster.png)
+  ![](images/reservation-form.png)
 
-5.From the Hub Cluster details view, copy the **Ingress subdomain** url.
-
-  ![](images/ingress-subdomain.png)
-
-6.Open a new browser tab, and on the URL field, enter **https://icp-console.** and paste the Ingress subdomain url that you copied in the previous step and press **Enter**.
-
-  ![](images/cp4mcm-console-url.png)
-
-7.Log in with your admin and password defined on [Request Your Environment](../../environment/overview) section.
-
-  ![](images/cp4mcm-console-login.png)
-
-8.Great, now you are ready to start your lab! Next section you will learn how to install Command Line Interface tools.
-
-  ![](images/cp4mcm-welcome-page.png)
+  After few minutes, your ROKS environment is ready. Now you are ready to move to the next step and install Cloud Pak for Multicloud Management!

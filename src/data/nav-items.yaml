@@ -8,8 +8,6 @@
   pages:
     - title: Overview
       path: /skytap/overview/
-    - title: Requesting your Skytap Environment
-      path: /skytap/requesting/
     - title: Preparing your Skytap Environment
       path: /skytap/preparing/
     - title: Introduction
