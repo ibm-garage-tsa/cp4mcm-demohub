@@ -30,8 +30,10 @@
   pages:
     - title: Overview
       path: /roks/overview/
+    - title: Requesting your ROKS Environment
+      path: /roks/requesting/
     - title: Before You Start
-      path: /gettingstarted/
+      path: /roks/beforestart/
     - title: Introduction
       path: /roks/introduction/
     - title: Lab 1 - Multicluster Management
