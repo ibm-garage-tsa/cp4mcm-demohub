@@ -30,6 +30,8 @@
       path: /roks/overview/
     - title: Requesting your ROKS Environment
       path: /roks/requesting/
+    - title: Installing CP4MCM
+      path: /roks/installpak/
     - title: Before You Start
       path: /roks/beforestart/
     - title: Introduction
