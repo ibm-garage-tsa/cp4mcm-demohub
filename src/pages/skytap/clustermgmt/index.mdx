@@ -1,5 +1,5 @@
 ---
-title: Lab 1 - Multicluster Management
+title: Lab 1 - Multicluster Management - Skytap
 description:
 ---
 
@@ -65,8 +65,8 @@ As different teams deploy more clusters, new challenges are introduced:
 Because of that, you want to explore how IBM Cloud Pak for Multicloud Management, provides consistent visibility, governance and automation of your complex environment.
 
 In this tutorial, you use a Red Hat OpenShift cluster with Cloud Pak for MCM as a **Management Hub** and a second single-node cluster running MicroK8s as a **managed cluster**
--	Hub cluster includes management console, federated monitoring, and all the controllers. 
--	Managed cluster includes klusterlet components that communicate status back to the Hub cluster. 
+-	Hub cluster includes management console, federated monitoring, and all the controllers.
+-	Managed cluster includes klusterlet components that communicate status back to the Hub cluster.
 
 The relationship between hub and managed clusters is shown in the diagram below:
 
@@ -108,7 +108,7 @@ In this section, you will add two new managed clusters in your Control Panel. As
 
   ![](images/6-cluster-mgmt-img.png)
 
-6. A curl command is generated that you will use to add the new cluster. Click **Copy command** button (1) and click **View cluster** (2) to see the new hub-cluster details page. 
+6. A curl command is generated that you will use to add the new cluster. Click **Copy command** button (1) and click **View cluster** (2) to see the new hub-cluster details page.
 
   ![](images/7-cluster-mgmt-img.png)
 
@@ -138,7 +138,7 @@ In this section, you will add two new managed clusters in your Control Panel. As
 
   ![](images/2020-09-17-20-05-03.png)
 
-  In case you will see the error like shown below, run the command again. 
+  In case you will see the error like shown below, run the command again.
 
   ![](images/2020-09-17-20-06-15.png)
 
@@ -182,11 +182,11 @@ In this section, you will add two new managed clusters in your Control Panel. As
 
   ![](images/2020-09-17-20-26-25.png)
 
-17. A curl command is generated that you will use to add the new cluster. Click **Copy command** button (1). 
+17. A curl command is generated that you will use to add the new cluster. Click **Copy command** button (1).
 
   ![](images/7-cluster-mgmt-img.png)
 
-18. Go back to the desktop and open the terminal window to MicroK8s cluster clicking the **MicroK8s Terminal** link. 
+18. Go back to the desktop and open the terminal window to MicroK8s cluster clicking the **MicroK8s Terminal** link.
 
 ![](images/2020-09-17-20-30-28.png)
 
@@ -324,12 +324,12 @@ TO BE REPLACED!!!
 
   ![](images/2020-09-18-16-27-52.png)
 
-11. You should see the details of the sample application, as shown below. Click on any of the icons to see the details of each object. 
+11. You should see the details of the sample application, as shown below. Click on any of the icons to see the details of each object.
 
   ![](images/2020-09-18-16-38-53.png)
 
 12. Click the **demo-modresortapp** placement rule (1) and notice that it defines the placement of the application to the clusters with label **environment=Dev** (2). It also specify that one instance of the application should be deployed in case more clusters is labeled this way.
-    
+
   ![](images/2020-09-18-16-43-05.png)
 
 13. Let's modify the target cluster. Edit the label in the yaml file on the right (1) changing the **Dev** to **QA** and apply the changes with the **Update** icon (2)
@@ -354,10 +354,10 @@ TO BE REPLACED!!!
   ![](images/2020-09-18-20-28-29.png)
 
 17. Go back to your browser window, open a new tab and provide the following URL `http://microk8s.demo.ibmdte.net:[port-number-from-previous-step]/resorts`
-    
+
   ![](images/2020-09-18-20-31-41.png)
 
-18. Great! Your Liberty application is available on your managed cluster. 
+18. Great! Your Liberty application is available on your managed cluster.
 
   This application is really a simple sample, just to show you how easy is to install an application from the catalog in multiple clusters. In our next lab you will deploy a hybrid application learning details about Application Management deployment using channels and subscriptions concepts.
 
