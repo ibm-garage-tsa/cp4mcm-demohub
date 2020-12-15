@@ -36,6 +36,8 @@
       path: /roks/beforestart/
     - title: Introduction
       path: /roks/introduction/
+    - title: Install CLI tools
+      path: /roks/installcli/
     - title: Lab 1 - Multicluster Management
       path: /roks/clustermgmt/
     - title: Lab 2 - Application Management
