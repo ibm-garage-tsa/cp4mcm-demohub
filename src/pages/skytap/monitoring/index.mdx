@@ -44,7 +44,7 @@ In this tutorial, you will explore the following key capabilities:
 
 ## Prerequisite
 
-- You need to provision your own copy of the CP4MCM 2.x environment, start it and verify for correct startup (check [here](../../gettingstarted/)).
+- You need to provision your own copy of the CP4MCM 2.x environment, start it and verify for correct startup (check [here](../preparing/)).
 
 ***
 
@@ -56,8 +56,8 @@ IBM Cloud Pak for Multicloud Management helps companies make the transition from
 In this tutorial, you learn how to use IBM Cloud Pak for Multicloud Management to monitor and manage the application availability with a "Golden Signal" approach to monitoring your applications. This approach focuses on Latency, Errors, Traffic, and Saturation (for a quick introduction, see Simplify Application Monitoring with SRE Golden Signals).
 
 In this tutorial, you use a Red Hat OpenShift cluster with Cloud Pak for MCM as a **Management Hub** and a second single-node cluster running MicroK8s as a **managed cluster**
--	Hub cluster includes management console, federated monitoring, and all the controllers. 
--	Managed cluster includes klusterlet components that communicate status back to the Hub cluster. 
+-	Hub cluster includes management console, federated monitoring, and all the controllers.
+-	Managed cluster includes klusterlet components that communicate status back to the Hub cluster.
 
 The relationship between hub and managed clusters is shown in the diagram below:
 
@@ -80,7 +80,7 @@ You will complete the following tasks:
 
 In this section, you will add a managed cluster in your Control Panel. If you have done this before as a part of [Cluster Management lab](../clustermgmt/index.mdx) you may skip to the [Next step](#deploy-cloud-native-monitoring-to-the-managed-cluster)
 
-1. To start the lab, you should be in your Cloud Pak for Multicloud Management Web Console. If you are not, check [here](../gettingstarted/) how to open your console page.
+1. To start the lab, you should be in your Cloud Pak for Multicloud Management Web Console. If you are not, check [here](../preparing/) how to open your console page.
 
    ![](images/2-cluster-mgmt-img.png)
 
@@ -96,11 +96,11 @@ In this section, you will add a managed cluster in your Control Panel. If you ha
 
    ![](images/2020-09-17-20-26-25.png)
 
-5. A curl command is generated that you will use to add the new cluster. Click **Copy command** button (1) and click **View cluster** (2) to see the new  managed cluster details page. 
+5. A curl command is generated that you will use to add the new cluster. Click **Copy command** button (1) and click **View cluster** (2) to see the new  managed cluster details page.
 
    ![](images/7-cluster-mgmt-img.png)
 
-6. Go back to the desktop and open the terminal window to MicroK8s cluster clicking the **MicroK8s Terminal** link. 
+6. Go back to the desktop and open the terminal window to MicroK8s cluster clicking the **MicroK8s Terminal** link.
 
    ![](images/2020-09-17-20-30-28.png)
 
@@ -222,7 +222,7 @@ To deploy Kuberenetes data collector (also known as cloud native monitoring) com
 
    ![](images/2020-09-27-17-35-36.png)
 
-   The next view, let you explore the metrics and events releated to the selected resource. On top, you can see the Event timeline (1) for wihich you can change the time window (from 30 minutes to 1 week). Deployment topology widget (2) shows how the specific resource is located within the cluster. 
+   The next view, let you explore the metrics and events releated to the selected resource. On top, you can see the Event timeline (1) for wihich you can change the time window (from 30 minutes to 1 week). Deployment topology widget (2) shows how the specific resource is located within the cluster.
 
    ![](images/2020-09-27-17-40-30.png)
 
@@ -288,7 +288,7 @@ On top of monitoring Linux worker nodes and basic Kubernetes objects Operations 
 7. You can verify if the application was successfuly deployed and is accessible by opening a new browser tab and entering the URL: `bookinfo.10.0.0.2.nip.io`. You should reach the page that looks like below:
 
    ![](images/2020-09-30-19-50-18.png)
-   
+
 ***
 
 ## Exploring synthetics monitoring
@@ -349,7 +349,7 @@ Cloud Pak for Multicloud Management is capable of monitoring the application ava
     ```
 
     Answer the installation wizard with the following values:
-    
+
     ```sh
     You will configure a new local point of presence (PoP).
 
@@ -366,7 +366,7 @@ Cloud Pak for Multicloud Management is capable of monitoring the application ava
     The description is set to "pop_user1"
 
     Enter the proxy server address for communicating with IBM ICAM server. The address format is ip:port (Press Enter if you do not need to use a proxy) :  Press Enter
-    Proxy server address for communicating with IBM ICAM server is set to 
+    Proxy server address for communicating with IBM ICAM server is set to
 
     Update the proxy type (no | manual | pac) for playbacking synthetic tests to monitor your web applications. Enter 'no' to choose no proxy. Enter 'manual' to configure your proxy with a proxy server ip address and port number. Enter 'pac' to use an automatic configuration URL. (Press Enter if you do not want to make any changes: no): Press Enter
 
@@ -471,7 +471,7 @@ Cloud Pak for Multicloud Management is capable of monitoring the application ava
 
    ![](images/2020-01-19-17-40-00.png)
 
-   Next, select the dropdown list in the Filter.  The default behavior is to show 50th, 90th, and 95th percentile for all URLs.  But, sometimes you want to filter the data.  
+   Next, select the dropdown list in the Filter.  The default behavior is to show 50th, 90th, and 95th percentile for all URLs.  But, sometimes you want to filter the data.
 
    ![](images/2020-01-20-08-12-32.png)
 
@@ -483,7 +483,7 @@ Cloud Pak for Multicloud Management is capable of monitoring the application ava
 
    ![](images/2020-01-20-08-16-32.png)
 
-   After you click the icon, you will see some very useful information as seen below.  At the top of the page, you see a scatter plot chart that allows you to see a distribution of the requests.  This is a very useful way to visualize the transactions because it allows you to see patterns and outliers.  
+   After you click the icon, you will see some very useful information as seen below.  At the top of the page, you see a scatter plot chart that allows you to see a distribution of the requests.  This is a very useful way to visualize the transactions because it allows you to see patterns and outliers.
 
    Below that, expand one of the requests and you will see a breakdown of where the request spent its time.
 
@@ -505,9 +505,9 @@ Cloud Pak for Multicloud Management is capable of monitoring the application ava
 
    ![](images/2020-01-21-08-48-36.png)
 
-   The service dependency shows a 1-hop topology of the microservices.  For the productpage service, it shows that there are clients connecting to the service and there is a dependency on "details" and "reviews".  
+   The service dependency shows a 1-hop topology of the microservices.  For the productpage service, it shows that there are clients connecting to the service and there is a dependency on "details" and "reviews".
 
-   Click on "reviews" icon.  You will navigate to that microservice and see the 1-hop topology for the "review" service.  Examine the golden signals for the "reviews" service.  
+   Click on "reviews" icon.  You will navigate to that microservice and see the 1-hop topology for the "review" service.  Examine the golden signals for the "reviews" service.
 
 8. Full Service Topology
 
@@ -531,7 +531,7 @@ Cloud Pak for Multicloud Management is capable of monitoring the application ava
 
 9. Drill Down into the Runtime
 
-   Sometimes you need additional details that can only be gathered from the data collector that is running within the runtime.  If the app server (python, Node.js, JVM, golang) is instrumented with a lightweight data collector, you can click on the container and drilldown into the runtime metrics.  
+   Sometimes you need additional details that can only be gathered from the data collector that is running within the runtime.  If the app server (python, Node.js, JVM, golang) is instrumented with a lightweight data collector, you can click on the container and drilldown into the runtime metrics.
 
    Click on the "container" in the Deployment topology.
 
@@ -551,7 +551,7 @@ Cloud Pak for Multicloud Management is capable of monitoring the application ava
 
    This concludes the exercise. You now understand how to naviagate Golden Signals view.
 
-   Additional resources: 
+   Additional resources:
    - [Golden Signals video on YouTube](https://youtu.be/z5WLD6vANvw)
    - [Blog: Golden Signals explained](https://www.ibm.com/cloud/blog/video-better-application-monitoring-with-sre-golden-signals)
 
