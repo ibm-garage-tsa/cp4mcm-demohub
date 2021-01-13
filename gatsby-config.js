@@ -19,8 +19,9 @@ module.exports = {
     isSearchEnabled: true,
     repository: {
       baseUrl:
-        'https://ibm-garage-tsa.github.io/cp4mcm-demohub',
+        'https://github.com/ibm-garage-tsa/cp4mcm-demohub',
       subDirectory: '/',
+      branch: 'master'
     },
   },
 }
