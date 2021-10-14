@@ -1,6 +1,6 @@
 module.exports = {
   siteMetadata: {
-    title: 'Cloud Pak for MCM 2.x on Skytap',
+    title: 'Cloud Pak for MCM 2.x',
     description: 'DemoHub for Cloud Pak for Multicloud Management',
     keywords: 'ibm,mcm,carbon',
   },
